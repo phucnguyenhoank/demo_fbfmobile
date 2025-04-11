@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -88,20 +89,20 @@ public class OtpActivity extends AppCompatActivity {
                     if (response.isSuccessful() && response.body() != null) {
                         // Thành công, thực hiện hành động đăng nhập tự động (lưu token, chuyển trang,...)
                         String token = response.body().getToken();
-                        Toast.makeText(OtpActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OtpActivity.this, "Register successfully!", Toast.LENGTH_SHORT).show();
                         // Ví dụ chuyển sang MainActivity
                         Intent intent = new Intent(OtpActivity.this, MainActivity.class);
                         // Lưu token nếu cần qua SharedPreferences hoặc SessionManager
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(OtpActivity.this, "Xác thực OTP thất bại.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OtpActivity.this, "OTP authentication fail.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
-                    Toast.makeText(OtpActivity.this, "Có lỗi khi gọi API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                public void onFailure(@NonNull Call<AuthenticationResponse> call, @NonNull Throwable t) {
+                    Toast.makeText(OtpActivity.this, "Error calling API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });

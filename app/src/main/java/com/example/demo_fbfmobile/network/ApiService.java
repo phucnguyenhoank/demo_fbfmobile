@@ -7,6 +7,8 @@ import com.example.demo_fbfmobile.model.RegisterRequest;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -19,5 +21,8 @@ public interface ApiService {
 
     @POST("/api/v1/auth/authenticate")
     Call<AuthenticationResponse> authenticate(@Body AuthenticationRequest request);
+
+    @GET("/api/v1/secured-request")
+    Call<ApiResponse<String>> getSecuredData(@Header("Authorization") String token);
 }
 

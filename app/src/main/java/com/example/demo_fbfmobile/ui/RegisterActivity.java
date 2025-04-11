@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -25,7 +26,7 @@ import retrofit2.Response;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etUsername, etPassword, etEmail, etName, etPhoneNumber, etAddress;
-    private Button btnOk;
+    private Button btnRegister;
 
     private ApiService apiService;
 
@@ -46,11 +47,11 @@ public class RegisterActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etPhoneNumber = findViewById(R.id.etPhoneNumber);
         etAddress = findViewById(R.id.etAddress);
-        btnOk = findViewById(R.id.btnOk);
+        btnRegister = findViewById(R.id.btnRegister);
 
         apiService = ApiClient.getApiService();
 
-        btnOk.setOnClickListener(v -> {
+        btnRegister.setOnClickListener(v -> {
             final String username = etUsername.getText().toString().trim();
             final String password = etPassword.getText().toString().trim();
             final String email = etEmail.getText().toString().trim();
@@ -59,7 +60,7 @@ public class RegisterActivity extends AppCompatActivity {
             final String address = etAddress.getText().toString().trim();
 
             ProgressDialog progressDialog = new ProgressDialog(this);
-            progressDialog.setMessage("Đang gửi OTP...");
+            progressDialog.setMessage("Sending OTP...");
             progressDialog.setCancelable(false);
             progressDialog.show();
 
@@ -67,12 +68,11 @@ public class RegisterActivity extends AppCompatActivity {
             Call<ApiResponse<String>> call = apiService.sendOtp(email);
             call.enqueue(new Callback<ApiResponse<String>>() {
                 @Override
-                public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                public void onResponse(@NonNull Call<ApiResponse<String>> call, @NonNull Response<ApiResponse<String>> response) {
 
                     progressDialog.dismiss();
 
                     if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                        // Nếu gửi OTP thành công, chuyển sang OtpActivity
                         Intent intent = new Intent(RegisterActivity.this, OtpActivity.class);
                         intent.putExtra("username", username);
                         intent.putExtra("password", password);
@@ -82,14 +82,14 @@ public class RegisterActivity extends AppCompatActivity {
                         intent.putExtra("address", address);
                         startActivity(intent);
                     } else {
-                        Toast.makeText(RegisterActivity.this, "Gửi OTP thất bại", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Send OTP fail", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                public void onFailure(@NonNull Call<ApiResponse<String>> call, @NonNull Throwable t) {
                     progressDialog.dismiss();
-                    Toast.makeText(RegisterActivity.this, "Có lỗi khi gọi API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(RegisterActivity.this, "Error calling API: " + t.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             });
         });
