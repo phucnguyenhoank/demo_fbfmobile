@@ -62,9 +62,10 @@ public class LoginActivity extends AppCompatActivity {
             public void onResponse(@NonNull Call<AuthenticationResponse> call, @NonNull Response<AuthenticationResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
-                    // 🔐 Save token to SharedPreferences
+                    // 🔐 Save token and cartID to SharedPreferences
                     TokenManager tokenManager = new TokenManager(LoginActivity.this);
                     tokenManager.saveToken(token);
+
                     // ✅ Now you can navigate to the next screen or home
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                     // Navigate to HomeActivity
@@ -83,29 +84,4 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private void callSecuredEndpoint() {
-        TokenManager tokenManager = new TokenManager(LoginActivity.this);
-        String token = tokenManager.getToken();
-        if (token != null) {
-            Call<ApiResponse<String>> call = apiService.getSecuredData("Bearer " + token);
-            call.enqueue(new Callback<ApiResponse<String>>() {
-                @Override
-                public void onResponse(@NonNull Call<ApiResponse<String>> call, @NonNull Response<ApiResponse<String>> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String result = response.body().getData();
-                        String username = tokenManager.getUsername();
-                        boolean expired = tokenManager.isTokenExpired();
-                        Toast.makeText(LoginActivity.this, "Secured data: " + result + ";" + username + ";" + expired, Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Failed to access secured API", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ApiResponse<String>> call, @NonNull Throwable t) {
-                    Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-    }
 }

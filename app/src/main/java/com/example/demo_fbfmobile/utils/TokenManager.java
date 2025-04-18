@@ -27,9 +27,8 @@ public class TokenManager {
         prefs.edit().remove(KEY_TOKEN).apply();
     }
 
-    // ✅ Decode JWT and get a field from the payload
-    public String getClaim(String claimKey) {
-        String token = getToken();
+    // 🔍 Decode a token without relying on internal storage
+    public String getClaimFromRawToken(String token, String claimKey) {
         if (token == null) return null;
 
         try {
@@ -45,13 +44,19 @@ public class TokenManager {
         }
     }
 
+    // ✅ Decode JWT and get a field from the payload
+    public String getClaim(String claimKey) {
+        String token = getToken();
+        return getClaimFromRawToken(token, claimKey); // ← Fixed: return was missing
+    }
+
     // 🧪 Convenience methods
     public String getUsername() {
         return getClaim("sub"); // 'sub' is the subject, usually the username
     }
 
-    public String getRole() {
-        return getClaim("role"); // depends on your JWT payload structure
+    public String getCartId() {
+        return getClaim("cartId");
     }
 
     public boolean isTokenExpired() {
