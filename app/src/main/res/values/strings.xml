@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">demo_fbfmobile</string>
+    <string name="home_action">Home</string>
+    <string name="food_action">Fome</string>
+    <string name="favorite_action">Favorite</string>
+    <string name="order_action">Order</string>
+    <string name="help_action">Help</string>
 </resources>

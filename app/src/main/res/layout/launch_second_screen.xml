@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorOrangeBase">
+    <ImageView
+        android:id="@+id/logo2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="280dp"
+        android:src="@drawable/logo2"
+        />
+    <TextView
+        android:id="@+id/welcometext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/logo2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="17dp"
+        android:text="WELCOME TO YUMQUICK"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"/>
+    <Button
+        android:id="@+id/btnlogin"
+        android:layout_width="207dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/welcometext"
+        android:layout_marginTop="37dp"
+        android:textSize="18sp"
+        android:text="Log In"
+        android:textColor="@color/colorOrangeBase"
+        android:backgroundTint="@color/colorYellowBase"
+        />
+    <Button
+        android:id="@+id/btnsingup"
+        android:layout_width="207dp"
+        android:layout_height="45dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnlogin"
+        android:layout_marginTop="4dp"
+        android:textSize="18sp"
+        android:text="Sign Up"
+        android:textColor="@color/colorOrangeBase"
+        android:backgroundTint="@color/colorYellow2"
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>
