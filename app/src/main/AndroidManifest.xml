@@ -16,6 +16,9 @@
         android:theme="@style/Theme.Demo_fbfmobile"
         tools:targetApi="31">
         <activity
+            android:name=".ui.ResetPasswordActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.HomeActivity"
             android:exported="false" />
         <activity

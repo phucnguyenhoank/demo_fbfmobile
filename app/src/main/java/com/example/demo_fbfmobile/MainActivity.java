@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.LoginActivity;
 import com.example.demo_fbfmobile.ui.RegisterActivity;
+import com.example.demo_fbfmobile.ui.ResetPasswordActivity;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,6 +46,12 @@ public class MainActivity extends AppCompatActivity {
         Button registerButton = findViewById(R.id.btnRegister);
         registerButton.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
+            startActivity(intent);
+        });
+
+        Button btnResetPassword = findViewById(R.id.btnResetPassword);
+        btnResetPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ResetPasswordActivity.class);
             startActivity(intent);
         });
 
