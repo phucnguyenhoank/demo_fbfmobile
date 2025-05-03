@@ -3,8 +3,11 @@ package com.example.demo_fbfmobile.network;
 import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.AuthenticationRequest;
 import com.example.demo_fbfmobile.model.AuthenticationResponse;
+import com.example.demo_fbfmobile.model.CartItemDisplay;
 import com.example.demo_fbfmobile.model.RegisterRequest;
 import com.example.demo_fbfmobile.model.ResetPasswordRequest;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
@@ -31,5 +34,9 @@ public interface ApiService {
 
     @POST("/api/v1/auth/reset-password")
     Call<ApiResponse<String>> resetPassword(@Body ResetPasswordRequest request);
+
+    @GET("/api/v1/cart-items/display")
+    Call<ApiResponse<List<CartItemDisplay>>> getCartItemsDisplay(@Header("Authorization") String authToken);
+
 }
 

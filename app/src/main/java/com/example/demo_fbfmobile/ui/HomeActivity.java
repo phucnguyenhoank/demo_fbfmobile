@@ -56,6 +56,12 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
             finish(); // Close HomeActivity
         });
+
+        Button btnCart = findViewById(R.id.btnCart);
+        btnCart.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, CartActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void callSecuredEndpoint() {
