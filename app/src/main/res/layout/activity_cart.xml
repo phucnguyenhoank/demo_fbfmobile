@@ -11,8 +11,19 @@
         android:id="@+id/recyclerViewCart"
         android:layout_width="match_parent"
         android:layout_height="453dp"
-        android:layout_marginTop="139dp"
+        android:layout_marginTop="92dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/btnCreateOrder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="141dp"
+        android:layout_marginTop="22dp"
+        android:text="Create Order"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewCart" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout >

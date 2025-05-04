@@ -50,7 +50,7 @@ public class CartActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewCart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CartItemAdapter(cartItems);
+        adapter = new CartItemAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
 
         fetchCartItems();

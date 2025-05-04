@@ -1,37 +1,64 @@
 package com.example.demo_fbfmobile.adapter;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.CartItemDisplay;
+import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.network.ApiClient;
+import com.example.demo_fbfmobile.network.ApiService;
+import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
+import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.util.Arrays;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder> {
     private List<CartItemDisplay> cartItems;
+    private String authToken;
+    private Context context;
 
-    public CartItemAdapter(List<CartItemDisplay> cartItems) {
+    public CartItemAdapter(List<CartItemDisplay> cartItems, Context context) {
         this.cartItems = cartItems;
+        this.context = context;
+        this.authToken = "Bearer " + new TokenManager(context).getToken();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageFood;
-        TextView textFoodName, textSize, textPrice, textQuantity;
+        TextView textFoodName, textPrice, textQuantity;
+        Spinner spinnerSize;
+        Button btnDecrease, btnIncrease, btnDelete;
 
         public ViewHolder(View itemView) {
             super(itemView);
             imageFood = itemView.findViewById(R.id.imageFood);
             textFoodName = itemView.findViewById(R.id.textFoodName);
-            textSize = itemView.findViewById(R.id.textSize);
+            spinnerSize = itemView.findViewById(R.id.spinnerSize);
             textPrice = itemView.findViewById(R.id.textPrice);
             textQuantity = itemView.findViewById(R.id.textQuantity);
+            btnDecrease = itemView.findViewById(R.id.btnDecrease);
+            btnIncrease = itemView.findViewById(R.id.btnIncrease);
+            btnDelete = itemView.findViewById(R.id.btnDelete);
         }
     }
 
@@ -46,13 +73,195 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         CartItemDisplay item = cartItems.get(position);
         holder.textFoodName.setText(item.getFoodName());
-        holder.textSize.setText("Size: " + item.getSize());
-        holder.textPrice.setText("Price: $" + item.getPrice());
-        holder.textQuantity.setText("Quantity: " + item.getQuantity());
+        holder.textPrice.setText("Đơn giá: " + item.getPrice() + "đ");
+        holder.textQuantity.setText("Số lượng: " + item.getQuantity());
 
         Glide.with(holder.imageFood.getContext())
                 .load(item.getFoodImageUrl())
                 .into(holder.imageFood);
+
+        // Set spinner
+        List<String> sizeOptions = Arrays.asList("S", "M", "L", "XL");
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(holder.itemView.getContext(),
+                android.R.layout.simple_spinner_item, sizeOptions);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        holder.spinnerSize.setAdapter(adapter);
+
+        int selectedIndex = sizeOptions.indexOf(item.getSize());
+        if (selectedIndex >= 0) {
+            holder.spinnerSize.setSelection(selectedIndex);
+        }
+
+        // Xử lý nút xóa
+        holder.btnDelete.setOnClickListener(v -> {
+            int adapterPosition = holder.getBindingAdapterPosition();
+            if (adapterPosition == RecyclerView.NO_POSITION) return;
+
+            CartItemDisplay currentItem = cartItems.get(adapterPosition);
+            Long cartItemId = currentItem.getId();
+
+            ApiService apiService = ApiClient.getApiService();
+            Call<ApiResponse<String>> call = apiService.deleteCartItem(authToken, cartItemId);
+            call.enqueue(new Callback<ApiResponse<String>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                    int currentPosition = holder.getBindingAdapterPosition();
+                    if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        cartItems.remove(currentPosition);
+                        notifyItemRemoved(currentPosition);
+                        notifyItemRangeChanged(currentPosition, cartItems.size());
+                    } else {
+                        Toast.makeText(context, "Xóa thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                    Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        // Xử lý nút tăng số lượng
+        holder.btnIncrease.setOnClickListener(v -> {
+            int adapterPosition = holder.getBindingAdapterPosition();
+            if (adapterPosition == RecyclerView.NO_POSITION) return;
+
+            CartItemDisplay currentItem = cartItems.get(adapterPosition);
+            int newQuantity = currentItem.getQuantity() + 1;
+            currentItem.setQuantity(newQuantity);
+            holder.textQuantity.setText("Số lượng: " + newQuantity);
+
+            CartItemUpdateRequest request = new CartItemUpdateRequest(currentItem.getId(), newQuantity, currentItem.getSize());
+            ApiService apiService = ApiClient.getApiService();
+            Call<ApiResponse<CartItemDto>> call = apiService.updateCartItem(authToken, request);
+            call.enqueue(new Callback<ApiResponse<CartItemDto>>() {
+                @Override
+                public void onResponse(Call<ApiResponse<CartItemDto>> call, Response<ApiResponse<CartItemDto>> response) {
+                    int currentPosition = holder.getBindingAdapterPosition();
+                    if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                    CartItemDisplay item = cartItems.get(currentPosition);
+                    if (!response.isSuccessful() || response.body() == null || !response.body().isSuccess()) {
+                        item.setQuantity(newQuantity - 1);
+                        holder.textQuantity.setText("Số lượng: " + (newQuantity - 1));
+                        Toast.makeText(context, "Cập nhật số lượng thất bại", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ApiResponse<CartItemDto>> call, Throwable t) {
+                    int currentPosition = holder.getBindingAdapterPosition();
+                    if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                    CartItemDisplay item = cartItems.get(currentPosition);
+                    item.setQuantity(newQuantity - 1);
+                    holder.textQuantity.setText("Số lượng: " + (newQuantity - 1));
+                    Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        // Xử lý nút giảm số lượng
+        holder.btnDecrease.setOnClickListener(v -> {
+            int adapterPosition = holder.getBindingAdapterPosition();
+            if (adapterPosition == RecyclerView.NO_POSITION) return;
+
+            CartItemDisplay currentItem = cartItems.get(adapterPosition);
+            int currentQuantity = currentItem.getQuantity();
+            if (currentQuantity > 1) {
+                int newQuantity = currentQuantity - 1;
+                currentItem.setQuantity(newQuantity);
+                holder.textQuantity.setText("Số lượng: " + newQuantity);
+
+                CartItemUpdateRequest request = new CartItemUpdateRequest(currentItem.getId(), newQuantity, currentItem.getSize());
+                ApiService apiService = ApiClient.getApiService();
+                Call<ApiResponse<CartItemDto>> call = apiService.updateCartItem(authToken, request);
+                call.enqueue(new Callback<ApiResponse<CartItemDto>>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<CartItemDto>> call, Response<ApiResponse<CartItemDto>> response) {
+                        int currentPosition = holder.getBindingAdapterPosition();
+                        if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                        CartItemDisplay item = cartItems.get(currentPosition);
+                        if (!response.isSuccessful() || response.body() == null || !response.body().isSuccess()) {
+                            item.setQuantity(currentQuantity);
+                            holder.textQuantity.setText("Số lượng: " + currentQuantity);
+                            Toast.makeText(context, "Cập nhật số lượng thất bại", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<CartItemDto>> call, Throwable t) {
+                        int currentPosition = holder.getBindingAdapterPosition();
+                        if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                        CartItemDisplay item = cartItems.get(currentPosition);
+                        item.setQuantity(currentQuantity);
+                        holder.textQuantity.setText("Số lượng: " + currentQuantity);
+                        Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+
+        // Xử lý thay đổi kích thước
+        holder.spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                int adapterPosition = holder.getBindingAdapterPosition();
+                if (adapterPosition == RecyclerView.NO_POSITION) return;
+
+                CartItemDisplay currentItem = cartItems.get(adapterPosition);
+                String selectedSize = sizeOptions.get(pos);
+                String currentSize = currentItem.getSize();
+                if (!selectedSize.equals(currentSize)) {
+                    currentItem.setSize(selectedSize);
+
+                    CartItemUpdateRequest request = new CartItemUpdateRequest(currentItem.getId(), currentItem.getQuantity(), selectedSize);
+                    ApiService apiService = ApiClient.getApiService();
+                    Call<ApiResponse<CartItemDto>> call = apiService.updateCartItem(authToken, request);
+                    call.enqueue(new Callback<ApiResponse<CartItemDto>>() {
+                        @Override
+                        public void onResponse(Call<ApiResponse<CartItemDto>> call, Response<ApiResponse<CartItemDto>> response) {
+                            int currentPosition = holder.getBindingAdapterPosition();
+                            if (currentPosition == RecyclerView.NO_POSITION) return;
+                            CartItemDisplay item = cartItems.get(currentPosition);
+                            if (!response.isSuccessful() || response.body() == null || !response.body().isSuccess()) {
+                                item.setSize(currentSize);
+                                int previousIndex = sizeOptions.indexOf(currentSize);
+                                if (previousIndex >= 0) {
+                                    holder.spinnerSize.setSelection(previousIndex);
+                                }
+                                Toast.makeText(context, "Cập nhật kích thước thất bại", Toast.LENGTH_SHORT).show();
+                            }
+                            else {
+                                holder.textPrice.setText(String.format("Đơn giá: %sđ", response.body().getData().getPrice()));
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ApiResponse<CartItemDto>> call, Throwable t) {
+                            int currentPosition = holder.getBindingAdapterPosition();
+                            if (currentPosition == RecyclerView.NO_POSITION) return;
+
+                            CartItemDisplay item = cartItems.get(currentPosition);
+                            item.setSize(currentSize);
+                            int previousIndex = sizeOptions.indexOf(currentSize);
+                            if (previousIndex >= 0) {
+                                holder.spinnerSize.setSelection(previousIndex);
+                            }
+                            Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) { }
+        });
     }
 
     @Override
@@ -60,5 +269,3 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         return cartItems.size();
     }
 }
-
-

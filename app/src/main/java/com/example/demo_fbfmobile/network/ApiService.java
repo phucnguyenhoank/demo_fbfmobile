@@ -4,6 +4,8 @@ import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.AuthenticationRequest;
 import com.example.demo_fbfmobile.model.AuthenticationResponse;
 import com.example.demo_fbfmobile.model.CartItemDisplay;
+import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.model.RegisterRequest;
 import com.example.demo_fbfmobile.model.ResetPasswordRequest;
 
@@ -11,9 +13,12 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface ApiService {
@@ -38,5 +43,16 @@ public interface ApiService {
     @GET("/api/v1/cart-items/display")
     Call<ApiResponse<List<CartItemDisplay>>> getCartItemsDisplay(@Header("Authorization") String authToken);
 
+    @PUT("/api/v1/cart-items/update")
+    Call<ApiResponse<CartItemDto>> updateCartItem(
+            @Header("Authorization") String token,
+            @Body CartItemUpdateRequest req
+    );
+
+    @DELETE("/api/v1/cart-items/{cartItemId}")
+    Call<ApiResponse<String>> deleteCartItem(
+            @Header("Authorization") String token,
+            @Path("cartItemId") Long cartItemId
+    );
 }
 
