@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         Spinner spinnerSize;
         Button btnDecrease, btnIncrease, btnDelete;
 
+        CheckBox checkboxSelect;
+
         public ViewHolder(View itemView) {
             super(itemView);
             imageFood = itemView.findViewById(R.id.imageFood);
@@ -59,6 +62,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             btnDecrease = itemView.findViewById(R.id.btnDecrease);
             btnIncrease = itemView.findViewById(R.id.btnIncrease);
             btnDelete = itemView.findViewById(R.id.btnDelete);
+            checkboxSelect = itemView.findViewById(R.id.checkboxSelect);
         }
     }
 
@@ -75,6 +79,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.textFoodName.setText(item.getFoodName());
         holder.textPrice.setText("Đơn giá: " + item.getPrice() + "đ");
         holder.textQuantity.setText("Số lượng: " + item.getQuantity());
+        holder.checkboxSelect.setChecked(item.isSelected());
+        holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            item.setSelected(isChecked);
+        });
 
         Glide.with(holder.imageFood.getContext())
                 .load(item.getFoodImageUrl())

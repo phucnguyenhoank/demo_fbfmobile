@@ -1,7 +1,9 @@
 package com.example.demo_fbfmobile.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -36,6 +38,8 @@ public class CartActivity extends AppCompatActivity {
     private CartItemAdapter adapter;
     private List<CartItemDisplay> cartItems = new ArrayList<>();
 
+    private Button btnCreateOrder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,8 +56,25 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CartItemAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
+        btnCreateOrder = findViewById(R.id.btnCreateOrder);
 
         fetchCartItems();
+
+        btnCreateOrder.setOnClickListener(v -> {
+            List<CartItemDisplay> selectedItems = new ArrayList<>();
+            for (CartItemDisplay item : cartItems) {
+                if (item.isSelected()) {
+                    selectedItems.add(item);
+                }
+            }
+            if (selectedItems.isEmpty()) {
+                Toast.makeText(this, "Vui lòng chọn ít nhất một sản phẩm", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(CartActivity.this, OrderCreationActivity.class);
+            intent.putParcelableArrayListExtra("selectedItems", new ArrayList<>(selectedItems));
+            startActivity(intent);
+        });
     }
 
     private void fetchCartItems() {

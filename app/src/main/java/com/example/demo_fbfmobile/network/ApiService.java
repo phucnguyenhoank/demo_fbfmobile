@@ -6,8 +6,12 @@ import com.example.demo_fbfmobile.model.AuthenticationResponse;
 import com.example.demo_fbfmobile.model.CartItemDisplay;
 import com.example.demo_fbfmobile.model.CartItemDto;
 import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
+import com.example.demo_fbfmobile.model.FbfOrderDto;
+import com.example.demo_fbfmobile.model.FbfUserDto;
+import com.example.demo_fbfmobile.model.OrderRequest;
 import com.example.demo_fbfmobile.model.RegisterRequest;
 import com.example.demo_fbfmobile.model.ResetPasswordRequest;
+import com.example.demo_fbfmobile.model.UpdateFbfUserRequest;
 
 import java.util.List;
 
@@ -44,15 +48,22 @@ public interface ApiService {
     Call<ApiResponse<List<CartItemDisplay>>> getCartItemsDisplay(@Header("Authorization") String authToken);
 
     @PUT("/api/v1/cart-items/update")
-    Call<ApiResponse<CartItemDto>> updateCartItem(
-            @Header("Authorization") String token,
-            @Body CartItemUpdateRequest req
-    );
+    Call<ApiResponse<CartItemDto>> updateCartItem(@Header("Authorization") String token, @Body CartItemUpdateRequest req);
 
     @DELETE("/api/v1/cart-items/{cartItemId}")
-    Call<ApiResponse<String>> deleteCartItem(
-            @Header("Authorization") String token,
-            @Path("cartItemId") Long cartItemId
-    );
+    Call<ApiResponse<String>> deleteCartItem(@Header("Authorization") String token, @Path("cartItemId") Long cartItemId);
+
+    @POST("/api/v1/fbf-orders/create")
+    Call<ApiResponse<FbfOrderDto>> createOrder(@Header("Authorization") String authToken, @Body OrderRequest request);
+
+    @DELETE("/api/v1/fbf-orders/{orderId}/undo")
+    Call<ApiResponse<String>> undoOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
+
+    @GET("api/v1/users/me")
+    Call<ApiResponse<FbfUserDto>> getCurrentUser(@Header("Authorization") String authToken);
+
+    @PUT("api/v1/users/me")
+    Call<ApiResponse<FbfUserDto>> updateCurrentUser(@Header("Authorization") String authToken, @Body UpdateFbfUserRequest request);
+
 }
 

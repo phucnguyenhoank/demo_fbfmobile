@@ -1,6 +1,10 @@
 package com.example.demo_fbfmobile.ui;
 
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,8 +13,22 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.demo_fbfmobile.R;
+import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.network.ApiClient;
+import com.example.demo_fbfmobile.network.ApiService;
+import com.example.demo_fbfmobile.utils.TokenManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
+    private TextView tvOrderId;
+    private TextView textTimer;
+    private Button btnPay;
+    private Long orderId;
+    private CountDownTimer countDownTimer;
+    private boolean isPaid = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +40,85 @@ public class PaymentActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        tvOrderId = findViewById(R.id.tvOrderId);
+        textTimer = findViewById(R.id.textTimer);
+        btnPay = findViewById(R.id.btnPay);
+        orderId = getIntent().getLongExtra("orderId", -1);
+        tvOrderId.setText("OrderID: " + orderId);
+        if (orderId == -1) {
+            Toast.makeText(this, "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Khởi động bộ đếm ngược 3 phút
+        startPaymentTimer();
+
+        btnPay.setOnClickListener(v -> {
+            isPaid = true;
+            countDownTimer.cancel(); // Dừng bộ đếm
+            Toast.makeText(PaymentActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+            btnPay.setEnabled(false); // Vô hiệu hóa nút
+            // Có thể thêm logic chuyển sang activity khác hoặc kết thúc
+        });
+    }
+
+    private void startPaymentTimer() {
+        countDownTimer = new CountDownTimer(3 * 60 * 1000, 1000) { // 3 phút
+            @Override
+            public void onTick(long millisUntilFinished) {
+                long seconds = millisUntilFinished / 1000;
+                long minutes = seconds / 60;
+                seconds = seconds % 60;
+                textTimer.setText(String.format("Thời gian còn lại: %d:%02d", minutes, seconds));
+            }
+
+            @Override
+            public void onFinish() {
+                if (!isPaid) {
+                    undoOrder();
+                }
+            }
+        }.start();
+    }
+
+    private void undoOrder() {
+        String token = new TokenManager(this).getToken();
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        String authToken = "Bearer " + token;
+
+        ApiService apiService = ApiClient.getApiService();
+        Call<ApiResponse<String>> call = apiService.undoOrder(authToken, orderId);
+        call.enqueue(new Callback<ApiResponse<String>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    Toast.makeText(PaymentActivity.this, "Đơn hàng đã bị hủy do hết thời gian thanh toán", Toast.LENGTH_SHORT).show();
+                } else {
+                    String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
+                    Toast.makeText(PaymentActivity.this, "Hủy đơn hàng thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();
+                }
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+                Toast.makeText(PaymentActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (countDownTimer != null) {
+            countDownTimer.cancel(); // Hủy bộ đếm khi activity bị hủy
+        }
     }
 }
