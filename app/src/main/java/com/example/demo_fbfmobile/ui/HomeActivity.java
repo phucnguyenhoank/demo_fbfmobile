@@ -129,13 +129,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchFoods(int page, int size, String sort) {
-        TokenManager tokenManager = new TokenManager(this);
-        String token = tokenManager.getToken();
-        if (token == null) {
-            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        api.getAllFoods("Bearer " + token, page, size, sort)
+        api.getAllFoods(page, size, sort)
             .enqueue(new Callback<PageResponse<FoodDto>>() {
                 @Override public void onResponse(Call<PageResponse<FoodDto>> call,
                                                  Response<PageResponse<FoodDto>> res) {

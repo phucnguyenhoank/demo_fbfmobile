@@ -78,7 +78,6 @@ public interface ApiService {
 
     @GET("/api/v1/food/all")
     Call<PageResponse<FoodDto>> getAllFoods(
-            @Header("Authorization") String bearerToken,
             @Query("page") int page,
             @Query("size") int size,
             @Query("sort") String sort);
