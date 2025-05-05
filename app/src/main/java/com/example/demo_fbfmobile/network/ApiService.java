@@ -5,6 +5,7 @@ import com.example.demo_fbfmobile.model.AuthenticationRequest;
 import com.example.demo_fbfmobile.model.AuthenticationResponse;
 import com.example.demo_fbfmobile.model.CartItemDisplay;
 import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.model.CartItemRequest;
 import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.model.FbfUserDto;
@@ -81,5 +82,11 @@ public interface ApiService {
             @Query("page") int page,
             @Query("size") int size,
             @Query("sort") String sort);
+
+    @POST("/api/v1/cart-items/add")
+    Call<ApiResponse<CartItemDto>> addCartItem(
+            @Header("Authorization") String bearerToken,
+            @Body CartItemRequest request
+    );
 }
 
