@@ -9,6 +9,7 @@ import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.model.FbfUserDto;
 import com.example.demo_fbfmobile.model.OrderRequest;
+import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.model.RegisterRequest;
 import com.example.demo_fbfmobile.model.ResetPasswordRequest;
 import com.example.demo_fbfmobile.model.UpdateFbfUserRequest;
@@ -65,5 +66,12 @@ public interface ApiService {
     @PUT("api/v1/users/me")
     Call<ApiResponse<FbfUserDto>> updateCurrentUser(@Header("Authorization") String authToken, @Body UpdateFbfUserRequest request);
 
+    @GET("/api/v1/fbf-orders/get-mine")
+    Call<PageResponse<FbfOrderDto>> getOrderHistory(
+            @Header("Authorization") String bearerToken,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort   // e.g. "createdAt,desc"
+    );
 }
 

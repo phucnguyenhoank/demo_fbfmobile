@@ -68,6 +68,12 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
             startActivity(intent);
         });
+
+        Button btnOrderHistory = findViewById(R.id.btnOrderHistory);
+        btnOrderHistory.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void callSecuredEndpoint() {

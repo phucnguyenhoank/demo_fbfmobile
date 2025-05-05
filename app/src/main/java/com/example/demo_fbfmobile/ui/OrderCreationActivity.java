@@ -137,7 +137,6 @@ public class OrderCreationActivity extends AppCompatActivity {
         String token = new TokenManager(this).getToken();
         if (token == null || token.isEmpty()) {
             Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
-            setResult(RESULT_CANCELED);
             return;
         }
         String authToken = "Bearer " + token;
@@ -153,12 +152,10 @@ public class OrderCreationActivity extends AppCompatActivity {
                     Intent intent = new Intent(OrderCreationActivity.this, PaymentActivity.class);
                     intent.putExtra("orderId", orderDto.getId());
                     startActivity(intent);
-                    setResult(RESULT_OK);
                     finish();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(OrderCreationActivity.this, "Tạo đơn hàng thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();
-                    setResult(RESULT_CANCELED);
                 }
             }
 
@@ -166,7 +163,6 @@ public class OrderCreationActivity extends AppCompatActivity {
             public void onFailure(Call<ApiResponse<FbfOrderDto>> call, Throwable t) {
                 Toast.makeText(OrderCreationActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 Log.e("ORDER_ERROR", "onFailure: " + t.getMessage());
-                setResult(RESULT_CANCELED);
             }
         });
     }
