@@ -8,6 +8,7 @@ import com.example.demo_fbfmobile.model.CartItemDto;
 import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.model.FbfUserDto;
+import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.model.OrderRequest;
 import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.model.RegisterRequest;
@@ -73,5 +74,12 @@ public interface ApiService {
             @Query("size") int size,
             @Query("sort") String sort   // e.g. "createdAt,desc"
     );
+
+    @GET("/api/v1/food/all")
+    Call<PageResponse<FoodDto>> getAllFoods(
+            @Header("Authorization") String bearerToken,
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort);
 }
 

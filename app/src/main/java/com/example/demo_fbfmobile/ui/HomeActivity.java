@@ -12,10 +12,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demo_fbfmobile.MainActivity;
 import com.example.demo_fbfmobile.R;
+import com.example.demo_fbfmobile.adapter.FoodAdapter;
 import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.FoodDto;
+import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
@@ -28,6 +33,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private ApiService apiService;
     private TextView tvResult;
+    private RecyclerView rvFoods;
+    private FoodAdapter adapter;
+    private ApiService api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +82,46 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
             startActivity(intent);
         });
+
+        rvFoods = findViewById(R.id.rvFoods);
+        adapter = new FoodAdapter();
+        rvFoods.setAdapter(adapter);
+        rvFoods.setLayoutManager(new GridLayoutManager(this, 2));
+
+        // khi nhấn +
+        adapter.setOnAddClickListener(food -> {
+            // ví dụ: chỉ Toast
+            Toast.makeText(this, "Added " + food.getName() + " to cart", Toast.LENGTH_SHORT).show();
+            // TODO: gọi API thêm vào giỏ hoặc lưu local
+        });
+
+        api = ApiClient.getClient().create(ApiService.class);
+        fetchFoods(0, 10, "name,asc");
+    }
+
+    private void fetchFoods(int page, int size, String sort) {
+        TokenManager tokenManager = new TokenManager(this);
+        String token = tokenManager.getToken();
+        if (token == null) {
+            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        api.getAllFoods("Bearer " + token, page, size, sort)
+            .enqueue(new Callback<PageResponse<FoodDto>>() {
+                @Override public void onResponse(Call<PageResponse<FoodDto>> call,
+                                                 Response<PageResponse<FoodDto>> res) {
+                    if (res.isSuccessful() && res.body()!=null) {
+                        adapter.setData(res.body().getContent());
+                    } else {
+                        Toast.makeText(HomeActivity.this,
+                                "Fetch failed: " + res.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override public void onFailure(Call<PageResponse<FoodDto>> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this,
+                            "Network error", Toast.LENGTH_SHORT).show();
+                }
+            });
     }
 
     private void callSecuredEndpoint() {
