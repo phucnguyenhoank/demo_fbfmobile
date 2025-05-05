@@ -90,7 +90,7 @@ public class OrderCreationActivity extends AppCompatActivity {
             for (CartItemDisplay item : selectedItems) {
                 selectedCartItemIds.add(item.getId());
             }
-            createOrder(phone, address, selectedCartItemIds, discountCode);
+            createUndoOrder(phone, address, selectedCartItemIds, discountCode);
         });
     }
 
@@ -133,7 +133,7 @@ public class OrderCreationActivity extends AppCompatActivity {
         });
     }
 
-    private void createOrder(String phone, String address, List<Long> selectedCartItemIds, String discountCode) {
+    private void createUndoOrder(String phone, String address, List<Long> selectedCartItemIds, String discountCode) {
         String token = new TokenManager(this).getToken();
         if (token == null || token.isEmpty()) {
             Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
@@ -143,7 +143,7 @@ public class OrderCreationActivity extends AppCompatActivity {
 
         ApiService apiService = ApiClient.getApiService();
         OrderRequest request = new OrderRequest(phone, address, selectedCartItemIds, discountCode);
-        Call<ApiResponse<FbfOrderDto>> call = apiService.createOrder(authToken, request);
+        Call<ApiResponse<FbfOrderDto>> call = apiService.createUndoOrder(authToken, request);
         call.enqueue(new Callback<ApiResponse<FbfOrderDto>>() {
             @Override
             public void onResponse(Call<ApiResponse<FbfOrderDto>> call, Response<ApiResponse<FbfOrderDto>> response) {

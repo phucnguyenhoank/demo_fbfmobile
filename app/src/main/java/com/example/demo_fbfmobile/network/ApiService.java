@@ -56,8 +56,11 @@ public interface ApiService {
     @DELETE("/api/v1/cart-items/{cartItemId}")
     Call<ApiResponse<String>> deleteCartItem(@Header("Authorization") String token, @Path("cartItemId") Long cartItemId);
 
-    @POST("/api/v1/fbf-orders/create")
-    Call<ApiResponse<FbfOrderDto>> createOrder(@Header("Authorization") String authToken, @Body OrderRequest request);
+    @POST("/api/v1/fbf-orders/create-undo")
+    Call<ApiResponse<FbfOrderDto>> createUndoOrder(@Header("Authorization") String authToken, @Body OrderRequest request);
+
+    @POST("/api/v1/fbf-orders/{orderId}/confirm")
+    Call<ApiResponse<String>> confirmOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
 
     @DELETE("/api/v1/fbf-orders/{orderId}/undo")
     Call<ApiResponse<String>> undoOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
