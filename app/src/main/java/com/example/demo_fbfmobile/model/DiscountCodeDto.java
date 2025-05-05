@@ -13,5 +13,5 @@ public class DiscountCodeDto {
     private Long id;
     private String code;
     private Double discountPercentage;
-    private LocalDateTime expirationDate;
+    private String expirationDate;
 }

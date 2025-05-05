@@ -2,6 +2,7 @@ package com.example.demo_fbfmobile.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -164,6 +165,7 @@ public class OrderCreationActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ApiResponse<FbfOrderDto>> call, Throwable t) {
                 Toast.makeText(OrderCreationActivity.this, "Lỗi mạng", Toast.LENGTH_SHORT).show();
+                Log.e("ORDER_ERROR", "onFailure: " + t.getMessage());
                 setResult(RESULT_CANCELED);
             }
         });

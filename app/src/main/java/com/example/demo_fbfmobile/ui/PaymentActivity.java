@@ -1,5 +1,6 @@
 package com.example.demo_fbfmobile.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.widget.Button;
@@ -57,10 +58,12 @@ public class PaymentActivity extends AppCompatActivity {
 
         btnPay.setOnClickListener(v -> {
             isPaid = true;
-            countDownTimer.cancel(); // Dừng bộ đếm
-            Toast.makeText(PaymentActivity.this, "Thanh toán thành công", Toast.LENGTH_SHORT).show();
+            countDownTimer.cancel();
+            Toast.makeText(PaymentActivity.this, "Thanh toán thành công", Toast.LENGTH_LONG).show();
             btnPay.setEnabled(false); // Vô hiệu hóa nút
-            // Có thể thêm logic chuyển sang activity khác hoặc kết thúc
+            Intent intent = new Intent(PaymentActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         });
     }
 

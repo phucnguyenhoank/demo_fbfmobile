@@ -31,6 +31,23 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#CCCCCC"
+        android:layout_marginVertical="16dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Thông tin vận chuyển"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+    <TextView
+        android:id="@+id/tvLabelPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Phone number"/>
     <EditText
         android:id="@+id/editPhone"
         android:layout_width="match_parent"
@@ -39,6 +56,12 @@
         android:hint="Số điện thoại"
         android:inputType="phone" />
 
+    <TextView
+        android:id="@+id/tvLabelAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Address"
+        android:layout_marginTop="8dp"/>
     <EditText
         android:id="@+id/editAddress"
         android:layout_width="match_parent"
