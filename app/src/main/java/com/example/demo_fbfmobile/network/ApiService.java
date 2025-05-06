@@ -90,5 +90,8 @@ public interface ApiService {
             @Header("Authorization") String bearerToken,
             @Body CartItemRequest request
     );
+
+    @GET("/api/v1/food/{id}")
+    Call<ApiResponse<FoodDto>> getFoodDetailsById(@Path("id") Long id);
 }
 

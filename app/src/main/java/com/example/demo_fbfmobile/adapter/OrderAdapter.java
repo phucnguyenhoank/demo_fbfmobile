@@ -37,17 +37,19 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         // convert ISO string → định dạng bạn muốn
         holder.tvOrderDate.setText(o.getCreatedAt().replace("T", " ").substring(0,16));
         holder.tvTotalPrice.setText("Total: " + o.getDiscountedTotalPrice());
+//        holder.tvStatus.setText("Status: " + o.get);
     }
 
     @Override public int getItemCount() { return orders.size(); }
 
     static class OrderViewHolder extends RecyclerView.ViewHolder {
-        TextView tvOrderId, tvOrderDate, tvTotalPrice;
+        TextView tvOrderId, tvOrderDate, tvTotalPrice, tvStatus;
         OrderViewHolder(View itemView) {
             super(itemView);
             tvOrderId    = itemView.findViewById(R.id.tvOrderId);
             tvOrderDate  = itemView.findViewById(R.id.tvOrderDate);
             tvTotalPrice = itemView.findViewById(R.id.tvTotalPrice);
+            tvStatus = itemView.findViewById(R.id.tvStatus);
         }
     }
 }

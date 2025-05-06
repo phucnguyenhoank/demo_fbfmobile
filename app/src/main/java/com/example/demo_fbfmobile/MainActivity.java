@@ -2,10 +2,14 @@ package com.example.demo_fbfmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -21,11 +25,13 @@ import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
+import com.example.demo_fbfmobile.ui.FoodDetailActivity;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.LoginActivity;
 import com.example.demo_fbfmobile.ui.RegisterActivity;
 import com.example.demo_fbfmobile.ui.ResetPasswordActivity;
 import com.example.demo_fbfmobile.utils.TokenManager;
+import com.google.android.material.snackbar.Snackbar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,6 +99,7 @@ public class MainActivity extends AppCompatActivity {
 
         api = ApiClient.getClient().create(ApiService.class);
         fetchFoods(0, 10, "name,asc");
+
     }
 
     private void fetchFoods(int page, int size, String sort) {
@@ -108,8 +115,15 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 @Override public void onFailure(Call<PageResponse<FoodDto>> call, Throwable t) {
-                    Toast.makeText(MainActivity.this,
-                            "Network error", Toast.LENGTH_SHORT).show();
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Lỗi mạng")
+                            .setMessage("Không thể tải danh sách món ăn.\nVui lòng kiểm tra kết nối mạng của bạn.")
+                            .setPositiveButton("Thử lại", (dialog, which) -> {
+                                // Gọi lại API
+                                fetchFoods(0, 10, "name,asc");
+                            })
+                            .setCancelable(false) // Không cho tắt bằng cách nhấn ngoài
+                            .show();
                 }
             });
     }

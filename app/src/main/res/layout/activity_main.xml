@@ -8,18 +8,19 @@
     tools:context=".MainActivity">
 
     <!-- Container các nút navigation (có thể thu gọn) -->
+
+    <!-- RecyclerView hiển thị foods -->
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="122dp"
         android:layout_marginTop="16dp"
         android:text="Welcome to Fastbreakfast"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- RecyclerView hiển thị foods -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvFoods"
         android:layout_width="0dp"

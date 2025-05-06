@@ -152,7 +152,7 @@ public class HomeActivity extends AppCompatActivity {
         String token = tokenManager.getToken();
         if (token != null) {
             Call<ApiResponse<String>> call = apiService.getSecuredData("Bearer " + token);
-            call.enqueue(new Callback<ApiResponse<String>>() {
+            call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(@NonNull Call<ApiResponse<String>> call, @NonNull Response<ApiResponse<String>> response) {
                     if (response.isSuccessful() && response.body() != null) {

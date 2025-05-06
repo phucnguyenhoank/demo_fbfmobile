@@ -77,7 +77,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         CartItemDisplay item = cartItems.get(position);
         holder.textFoodName.setText(item.getFoodName());
-        holder.textPrice.setText("Đơn giá: " + item.getPrice() + "đ");
+        holder.textPrice.setText("Đơn giá: " + item.getPrice() + " VND");
         holder.textQuantity.setText("Số lượng: " + item.getQuantity());
         holder.checkboxSelect.setChecked(item.isSelected());
         holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -246,7 +246,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                                 Toast.makeText(context, "Cập nhật kích thước thất bại", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                holder.textPrice.setText(String.format("Đơn giá: %sđ", response.body().getData().getPrice()));
+                                holder.textPrice.setText(String.format("Đơn giá: %s VND", response.body().getData().getPrice()));
                             }
                         }
 

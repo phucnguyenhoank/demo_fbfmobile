@@ -1,5 +1,7 @@
 package com.example.demo_fbfmobile.adapter;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.FoodDto;
+import com.example.demo_fbfmobile.ui.FoodDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,13 +38,22 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override public void onBindViewHolder(@NonNull FoodViewHolder h, int pos) {
         FoodDto f = list.get(pos);
         h.tvName.setText(f.getName());
-        // lấy giá size đầu tiên làm ví dụ
+
         double price = f.getSizes().isEmpty() ? 0 : f.getSizes().get(0).getPrice();
-        h.tvPrice.setText(String.format("$%.2f", price));
-        // load ảnh (Glide hoặc Picasso)
+        h.tvPrice.setText(String.format("%.2f VND", price));
+
         Glide.with(h.itemView).load(f.getImageUrl()).into(h.ivFood);
+
         h.btnAdd.setOnClickListener(v -> {
             if (listener != null) listener.onAdd(f);
+        });
+
+        h.itemView.setOnClickListener(v -> {
+            // Mở FoodDetailActivity và truyền foodId
+            Context context = h.itemView.getContext();
+            Intent intent = new Intent(context, FoodDetailActivity.class);
+            intent.putExtra(FoodDetailActivity.EXTRA_FOOD_ID, f.getId());
+            context.startActivity(intent);
         });
     }
     @Override public int getItemCount() { return list.size(); }
