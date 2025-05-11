@@ -42,6 +42,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.retrofit)
+    implementation(libs.circleindicator)
     implementation(libs.retrofitGson)
     compileOnly(libs.lombok)
     annotationProcessor(libs.lombok)
