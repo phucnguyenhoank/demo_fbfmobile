@@ -2,17 +2,46 @@ package com.example.demo_fbfmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.demo_fbfmobile.adapter.FoodAdapter;
+import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.model.CartItemRequest;
+import com.example.demo_fbfmobile.model.FoodDto;
+import com.example.demo_fbfmobile.model.PageResponse;
+import com.example.demo_fbfmobile.network.ApiClient;
+import com.example.demo_fbfmobile.network.ApiService;
+import com.example.demo_fbfmobile.ui.FoodDetailActivity;
+import com.example.demo_fbfmobile.ui.HomeActivity;
+import com.example.demo_fbfmobile.ui.LoginActivity;
 import com.example.demo_fbfmobile.ui.RegisterActivity;
+import com.example.demo_fbfmobile.ui.ResetPasswordActivity;
+import com.example.demo_fbfmobile.utils.TokenManager;
+import com.google.android.material.snackbar.Snackbar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+    private RecyclerView rvFoods;
+    private FoodAdapter adapter;
+    private ApiService api;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +54,77 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        Button registerButton = findViewById(R.id.btnEat);
+        Button eatButton = findViewById(R.id.btnEat);
+        eatButton.setOnClickListener(v -> {
+            TokenManager tokenManager = new TokenManager(MainActivity.this);
+            if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                // Token valid, go to HomeActivity
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+            } else {
+                // Token missing or expired, go to LoginActivity
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button registerButton = findViewById(R.id.btnRegister);
         registerButton.setOnClickListener(v -> {
-            // Navigate to RegisterActivity
             Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
             startActivity(intent);
         });
+
+        Button btnResetPassword = findViewById(R.id.btnResetPassword);
+        btnResetPassword.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, ResetPasswordActivity.class);
+            startActivity(intent);
+        });
+
+        rvFoods = findViewById(R.id.rvFoods);
+        adapter = new FoodAdapter();
+        rvFoods.setAdapter(adapter);
+        rvFoods.setLayoutManager(new GridLayoutManager(this, 2));
+
+        // khi nhấn +
+        adapter.setOnAddClickListener(food -> {
+            TokenManager tokenManager = new TokenManager(MainActivity.this);
+            if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        api = ApiClient.getClient().create(ApiService.class);
+        fetchFoods(0, 10, "name,asc");
+
+    }
+
+    private void fetchFoods(int page, int size, String sort) {
+        api.getAllFoods(page, size, sort)
+            .enqueue(new Callback<PageResponse<FoodDto>>() {
+                @Override public void onResponse(Call<PageResponse<FoodDto>> call,
+                                                 Response<PageResponse<FoodDto>> res) {
+                    if (res.isSuccessful() && res.body()!=null) {
+                        adapter.setData(res.body().getContent());
+                    } else {
+                        Toast.makeText(MainActivity.this,
+                                "Fetch failed: " + res.code(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+                @Override public void onFailure(Call<PageResponse<FoodDto>> call, Throwable t) {
+                    new AlertDialog.Builder(MainActivity.this)
+                            .setTitle("Lỗi mạng")
+                            .setMessage("Không thể tải danh sách món ăn.\nVui lòng kiểm tra kết nối mạng của bạn.")
+                            .setPositiveButton("Thử lại", (dialog, which) -> {
+                                // Gọi lại API
+                                fetchFoods(0, 10, "name,asc");
+                            })
+                            .setCancelable(false) // Không cho tắt bằng cách nhấn ngoài
+                            .show();
+                }
+            });
     }
 }

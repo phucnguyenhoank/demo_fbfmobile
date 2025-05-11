@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">demo_fbfmobile</string>
+    <string name="home_action">Home</string>
+    <string name="food_action">Fome</string>
+    <string name="favorite_action">Favorite</string>
+    <string name="order_action">Order</string>
+    <string name="help_action">Help</string>
+    <string name="onboarding_a_title">Order For Food</string>
+    <string name="onboarding_a_desc">Order quickly and conveniently</string>
+    <string name="onboarding_b_title">Easy Payment</string>
+    <string name="onboarding_b_desc">Pay with your card, QR code or cash</string>
+    <string name="onboarding_c_title">Fast Delivery</string>
+    <string name="onboarding_c_desc">Fast delivery to your door</string>
+    <string name="onboarding_a_btndesc">Next</string>
+    <string name="onboarding_c_btndesc">Get Started</string>
 </resources>
