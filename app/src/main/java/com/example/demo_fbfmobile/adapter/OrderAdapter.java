@@ -33,11 +33,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     @Override
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         FbfOrderDto o = orders.get(position);
-        holder.tvOrderId.setText("Order #" + o.getId());
-        // convert ISO string → định dạng bạn muốn
-        holder.tvOrderDate.setText(o.getCreatedAt().replace("T", " ").substring(0,16));
-        holder.tvTotalPrice.setText("Total: " + o.getDiscountedTotalPrice());
-//        holder.tvStatus.setText("Status: " + o.get);
+        holder.tvOrderId.setText("Mã hóa đơn #" + o.getId());
+        holder.tvOrderDate.setText("Ngày tạo: " + o.getCreatedAt().replace("T", " ").substring(0,16));
+        holder.tvTotalPrice.setText("Tổng: " + o.getDiscountedTotalPrice() + " VND");
+        holder.tvStatus.setText("Trạng thái: " + o.getStatus());
     }
 
     @Override public int getItemCount() { return orders.size(); }

@@ -2,7 +2,6 @@ package com.example.demo_fbfmobile.ui;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -28,7 +27,6 @@ import retrofit2.Response;
 public class OrderHistoryActivity extends AppCompatActivity {
 
     private RecyclerView rvOrders;
-    private ProgressBar progressBar;
     private OrderAdapter adapter;
     private String token;
 
@@ -50,13 +48,7 @@ public class OrderHistoryActivity extends AppCompatActivity {
             finish();
         }
 
-        // Toolbar back button
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         rvOrders    = findViewById(R.id.rvOrders);
-        progressBar = findViewById(R.id.progressBar);
         adapter     = new OrderAdapter();
         rvOrders.setAdapter(adapter);
 
@@ -71,13 +63,11 @@ public class OrderHistoryActivity extends AppCompatActivity {
     }
 
     private void fetchOrderHistory(int page, int size, String sort) {
-        progressBar.setVisibility(View.VISIBLE);
         ApiService api = ApiClient.getApiService();
         api.getOrderHistory("Bearer " + token, page, size, sort)
-                .enqueue(new Callback<PageResponse<FbfOrderDto>>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(Call<PageResponse<FbfOrderDto>> call, Response<PageResponse<FbfOrderDto>> res) {
-                        progressBar.setVisibility(View.GONE);
                         if (res.isSuccessful() && res.body()!=null) {
                             adapter.setOrders(res.body().getContent());
                         } else {
@@ -88,7 +78,6 @@ public class OrderHistoryActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<PageResponse<FbfOrderDto>> call, Throwable t) {
-                        progressBar.setVisibility(View.GONE);
                         Toast.makeText(OrderHistoryActivity.this,
                                 "Network error", Toast.LENGTH_SHORT).show();
                     }
