@@ -99,6 +99,38 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    // Phương thức xử lý click cho ivCart
+    public void onCartClick(View view) {
+        Toast.makeText(this, "Cart clicked!", Toast.LENGTH_SHORT).show();
+        // Thêm logic của bạn, ví dụ: mở màn hình giỏ hàng
+        TokenManager tokenManager = new TokenManager(MainActivity.this);
+        if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+            // Token valid, go to HomeActivity
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        } else {
+            // Token missing or expired, go to LoginActivity
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
+    // Phương thức xử lý click cho ivProfile
+    public void onProfileClick(View view) {
+        Toast.makeText(this, "Profile clicked!", Toast.LENGTH_SHORT).show();
+        // Thêm logic của bạn, ví dụ: mở màn hình hồ sơ
+        TokenManager tokenManager = new TokenManager(MainActivity.this);
+        if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+            // Token valid, go to HomeActivity
+            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+            startActivity(intent);
+        } else {
+            // Token missing or expired, go to LoginActivity
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
+
     private void fetchFoods(int page, int size, String sort) {
         api.getAllFoods(page, size, sort)
             .enqueue(new Callback<>() {

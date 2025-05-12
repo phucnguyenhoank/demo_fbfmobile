@@ -114,6 +114,7 @@
             android:textColor="@color/colorOrangeBase"
             android:textStyle="bold"
             android:text="Quên Mật Khẩu?"
+            android:onClick="onForgotPasswordClick"
             />
         <Button
             android:layout_marginTop="50dp"
@@ -164,8 +165,8 @@
             android:id="@+id/txtdangky"
             android:text="Bạn chưa có tài khoản? Đăng ký"
             android:textColor="@color/colorOrangeBase"
-            android:layout_gravity="center"/>
-
+            android:layout_gravity="center"
+            android:onClick="onRegisterClick"/>
 
     </LinearLayout>
 

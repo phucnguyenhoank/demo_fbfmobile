@@ -32,20 +32,24 @@
 
         <!-- Icon bên phải -->
         <ImageView
+            android:id="@+id/ivCart"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/ic_cart" />
+            android:src="@drawable/ic_cart"
+            android:onClick="onCartClick"/>
 
         <ImageView
+            android:id="@+id/ivProfile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/ic_profile" />
+            android:src="@drawable/ic_profile"
+            android:onClick="onProfileClick"/>
     </LinearLayout>
 
     <HorizontalScrollView
