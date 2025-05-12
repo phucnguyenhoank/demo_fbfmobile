@@ -1,11 +1,17 @@
 package com.example.demo_fbfmobile;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -43,39 +49,12 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView rvFoods;
     private FoodAdapter adapter;
     private ApiService api;
+    private boolean isLowToHigh = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-
-
-//        Button eatButton = findViewById(R.id.btnEat);
-//        eatButton.setOnClickListener(v -> {
-//            TokenManager tokenManager = new TokenManager(MainActivity.this);
-//            if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                // Token valid, go to HomeActivity
-//                Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-//                startActivity(intent);
-//            } else {
-//                // Token missing or expired, go to LoginActivity
-//                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        Button registerButton = findViewById(R.id.btnRegister);
-//        registerButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, RegisterActivity.class);
-//            startActivity(intent);
-//        });
-//
-//        Button btnResetPassword = findViewById(R.id.btnResetPassword);
-//        btnResetPassword.setOnClickListener(v -> {
-//            Intent intent = new Intent(MainActivity.this, ResetPasswordActivity.class);
-//            startActivity(intent);
-//        });
 
         rvFoods = findViewById(R.id.rvFoods);
         adapter = new FoodAdapter();
@@ -97,6 +76,29 @@ public class MainActivity extends AppCompatActivity {
         api = ApiClient.getClient().create(ApiService.class);
         fetchFoods(0, 10, "name,asc");
 
+    }
+
+    // Phương thức xử lý click
+    public void onSortClick(View view) {
+        isLowToHigh = !isLowToHigh; // Chuyển đổi trạng thái
+        updateSortText();
+    }
+
+    private void updateSortText() {
+        TextView tvSort = findViewById(R.id.tvSort);
+        String prefix = "Xếp theo giá: ";
+        String suffix = isLowToHigh ? "từ thấp đến cao" : "từ cao đến thấp";
+        String fullText = prefix + suffix;
+
+        // Tạo SpannableString để định dạng màu
+        SpannableString spannable = new SpannableString(fullText);
+        // Màu đen cho "Xếp theo giá: "
+        spannable.setSpan(new ForegroundColorSpan(Color.BLACK), 0, prefix.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // Màu orange_primary cho phần còn lại
+        spannable.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.orange_primary)),
+                prefix.length(), fullText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+        tvSort.setText(spannable);
     }
 
     // Phương thức xử lý click cho ivCart
