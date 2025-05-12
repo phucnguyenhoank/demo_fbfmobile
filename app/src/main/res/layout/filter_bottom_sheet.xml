@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_bottom_sheet"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chọn khoảng giá" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/priceMinSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="0"
+        android:valueTo="300000"
+        android:stepSize="1000"
+        android:value="0" />
+
+    <com.google.android.material.slider.Slider
+        android:id="@+id/priceMaxSlider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:valueFrom="0"
+        android:valueTo="300000"
+        android:stepSize="1000"
+        android:value="100000" />
+
+
+    <!-- RadioGroup với 3 RadioButton -->
+    <TextView
+        android:id="@+id/tvSortOptions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sắp xếp theo" />
+
+    <RadioGroup
+        android:id="@+id/radioFieldSort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/radioFoodId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mã sản phẩm" />
+
+        <RadioButton
+            android:id="@+id/radioFoodName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tên sản phẩm" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:id="@+id/radioDirectionSort"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <RadioButton
+            android:id="@+id/radioAscending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tăng dần" />
+
+        <RadioButton
+            android:id="@+id/radioDescending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giảm dần" />
+    </RadioGroup>
+
+    <!-- Nút Áp dụng -->
+    <Button
+        android:id="@+id/btnApplyFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Áp dụng" />
+
+    <!-- Nút Xóa bộ lọc -->
+    <Button
+        android:id="@+id/btnClearFilter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Xóa bộ lọc" />
+</LinearLayout>

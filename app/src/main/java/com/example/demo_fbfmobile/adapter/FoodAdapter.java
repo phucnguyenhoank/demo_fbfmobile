@@ -18,8 +18,10 @@ import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.ui.FoodDetailActivity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     public interface OnAddClickListener { void onAdd(FoodDto food); }
@@ -41,7 +43,8 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         h.tvName.setText(f.getName());
 
         double price = f.getSizes().isEmpty() ? 0 : f.getSizes().get(0).getPrice();
-        h.tvPrice.setText(String.format("%.2f VND", price));
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        h.tvPrice.setText(nf.format(price) + " VND");
 
         h.tvDescription.setText(f.getDescription());
 

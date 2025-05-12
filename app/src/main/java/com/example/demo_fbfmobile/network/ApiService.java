@@ -101,5 +101,26 @@ public interface ApiService {
             @Query("id") Long categoryId
     );
 
+    @GET("/api/v1/food/search/full")
+    Call<PageResponse<FoodDto>> getFoodByFullFilter(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("min") double min,
+            @Query("max") double max,
+            @Query("name") String name,
+            @Query("categoryId") Long categoryId
+    );
+
+    @GET("/api/v1/food/search/by-price")
+    Call<PageResponse<FoodDto>> getFoodByPriceBetween(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("min") double min,
+            @Query("max") double max
+    );
+
+
 }
 
