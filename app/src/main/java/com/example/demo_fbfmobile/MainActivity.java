@@ -15,6 +15,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demo_fbfmobile.adapter.FoodAdapter;
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         rvFoods = findViewById(R.id.rvFoods);
         adapter = new FoodAdapter();
         rvFoods.setAdapter(adapter);
-        rvFoods.setLayoutManager(new GridLayoutManager(this, 2));
+        rvFoods.setLayoutManager(new LinearLayoutManager(this));
 
         // khi nhấn +
         adapter.setOnAddClickListener(food -> {
@@ -104,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchFoods(int page, int size, String sort) {
         api.getAllFoods(page, size, sort)
-            .enqueue(new Callback<PageResponse<FoodDto>>() {
+            .enqueue(new Callback<>() {
                 @Override public void onResponse(Call<PageResponse<FoodDto>> call,
                                                  Response<PageResponse<FoodDto>> res) {
                     if (res.isSuccessful() && res.body()!=null) {

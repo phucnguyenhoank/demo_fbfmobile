@@ -13,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demo_fbfmobile.MainActivity;
@@ -88,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
         rvFoods = findViewById(R.id.rvFoods);
         adapter = new FoodAdapter();
         rvFoods.setAdapter(adapter);
-        rvFoods.setLayoutManager(new GridLayoutManager(this, 2));
+        rvFoods.setLayoutManager(new LinearLayoutManager(this));
 
         // khi nhấn +
         adapter.setOnAddClickListener(food -> {

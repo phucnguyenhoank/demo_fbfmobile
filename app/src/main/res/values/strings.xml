@@ -13,4 +13,5 @@
     <string name="onboarding_c_desc">Fast delivery to your door</string>
     <string name="onboarding_a_btndesc">Next</string>
     <string name="onboarding_c_btndesc">Get Started</string>
+    <string name="api_server_ip">192.168.53.23</string>
 </resources>
