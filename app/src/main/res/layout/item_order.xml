@@ -5,12 +5,12 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     card_view:cardCornerRadius="8dp"
-    android:background="@color/colorGray2"
+    android:background="@color/gray_light"
     card_view:cardElevation="4dp">
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorGray2"
+        android:background="@color/gray_light"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="250dp"
@@ -44,13 +44,13 @@
             android:id="@+id/tvStatus"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="PENDING"
-            android:padding="20dp"
-            android:textColor="@color/colorGreenDark"
-            android:textStyle="bold"
-            android:textSize="22sp"
+            android:layout_marginTop="4dp"
             android:gravity="center"
-            android:layout_marginTop="4dp"/>
+            android:padding="20dp"
+            android:text="PENDING"
+            android:textColor="@color/colorGreenDark"
+            android:textSize="10sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

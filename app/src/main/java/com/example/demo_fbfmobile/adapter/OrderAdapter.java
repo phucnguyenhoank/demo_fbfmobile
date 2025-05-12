@@ -36,7 +36,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.tvOrderId.setText("Mã hóa đơn #" + o.getId());
         holder.tvOrderDate.setText("Ngày tạo: " + o.getCreatedAt().replace("T", " ").substring(0,16));
         holder.tvTotalPrice.setText("Tổng: " + o.getDiscountedTotalPrice() + " VND");
-        holder.tvStatus.setText("Trạng thái: " + o.getStatus());
+        holder.tvStatus.setText(o.getStatus());
     }
 
     @Override public int getItemCount() { return orders.size(); }
