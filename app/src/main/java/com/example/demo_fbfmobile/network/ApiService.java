@@ -10,6 +10,7 @@ import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.model.FbfUserDto;
 import com.example.demo_fbfmobile.model.FoodDto;
+import com.example.demo_fbfmobile.model.OrderItemDetailDto;
 import com.example.demo_fbfmobile.model.OrderRequest;
 import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.model.RegisterRequest;
@@ -93,5 +94,9 @@ public interface ApiService {
 
     @GET("/api/v1/food/{id}")
     Call<ApiResponse<FoodDto>> getFoodDetailsById(@Path("id") Long id);
+
+    @GET("/api/v1/order-item/get")
+    Call<ApiResponse<List<OrderItemDetailDto>>> getOrderItemByOrderId(@Header("Authorization") String token, @Query("id") Long id);
+
 }
 
