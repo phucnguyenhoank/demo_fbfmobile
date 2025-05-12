@@ -79,19 +79,27 @@ public interface ApiService {
             @Query("sort") String sort   // e.g. "createdAt,desc"
     );
 
+    @POST("/api/v1/cart-items/add")
+    Call<ApiResponse<CartItemDto>> addCartItem(
+            @Header("Authorization") String bearerToken,
+            @Body CartItemRequest request
+    );
     @GET("/api/v1/food/all")
     Call<PageResponse<FoodDto>> getAllFoods(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sort") String sort);
 
-    @POST("/api/v1/cart-items/add")
-    Call<ApiResponse<CartItemDto>> addCartItem(
-            @Header("Authorization") String bearerToken,
-            @Body CartItemRequest request
-    );
-
     @GET("/api/v1/food/{id}")
     Call<ApiResponse<FoodDto>> getFoodDetailsById(@Path("id") Long id);
+
+    @GET("/api/v1/food/search/category-id")
+    Call<PageResponse<FoodDto>> getFoodsByCategoryId(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("id") Long categoryId
+    );
+
 }
 
