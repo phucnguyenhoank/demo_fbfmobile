@@ -3,6 +3,7 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -72,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
                     // 🔐 Save token and cartID to SharedPreferences
                     TokenManager tokenManager = new TokenManager(LoginActivity.this);
                     tokenManager.saveToken(token);
+                    Log.d("LoginActivity", "Token saved: " + token);
 
                     // ✅ Now you can navigate to the next screen or home
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();

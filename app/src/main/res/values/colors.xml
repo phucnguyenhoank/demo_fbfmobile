@@ -52,5 +52,9 @@
     <color name="colorPink">#E91E63</color>
     <color name="colorIndigo">#3F51B5</color>
 
+    <!-- Gray Color -->
+    <color name="colorGray">#9E9E9E</color>
+    <color name="colorGray2">#F5F5F5</color>
+
 
 </resources>
