@@ -26,8 +26,10 @@ import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.CartItemUpdateRequest;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -77,7 +79,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         CartItemDisplay item = cartItems.get(position);
         holder.textFoodName.setText(item.getFoodName());
-        holder.textPrice.setText("Đơn giá: " + item.getPrice() + " VND");
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        holder.textPrice.setText("Đơn giá: " + nf.format(item.getPrice()) + " VND");
         holder.textQuantity.setText("Số lượng: " + item.getQuantity());
         holder.checkboxSelect.setChecked(item.isSelected());
         holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -246,7 +249,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                                 Toast.makeText(context, "Cập nhật kích thước thất bại", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                holder.textPrice.setText(String.format("Đơn giá: %s VND", response.body().getData().getPrice()));
+                                NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+                                holder.textPrice.setText("Đơn giá: " + nf.format(response.body().getData().getPrice()) + " VND");
                             }
                         }
 

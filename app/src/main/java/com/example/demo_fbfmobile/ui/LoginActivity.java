@@ -3,6 +3,7 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
@@ -91,6 +92,20 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Error: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    // Phương thức xử lý click cho txtForgotPassword
+    public void onForgotPasswordClick(View view) {
+        Toast.makeText(this, "Forgot Password clicked!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
+        startActivity(intent);
+    }
+
+    // Phương thức xử lý click cho txtdangky
+    public void onRegisterClick(View view) {
+        Toast.makeText(this, "Register clicked!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+        startActivity(intent);
     }
 
 }

@@ -5,13 +5,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     card_view:cardCornerRadius="8dp"
-    android:background="@color/colorGray2"
+    android:background="@color/gray_light"
     card_view:cardElevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorGray2"
+        android:background="@color/gray_light"
         android:orientation="horizontal">
 
         <!-- Layout trái chứa thông tin đơn hàng -->

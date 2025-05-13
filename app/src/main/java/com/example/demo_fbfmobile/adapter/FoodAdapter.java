@@ -13,12 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.ui.FoodDetailActivity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder> {
     public interface OnAddClickListener { void onAdd(FoodDto food); }
@@ -40,7 +43,10 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
         h.tvName.setText(f.getName());
 
         double price = f.getSizes().isEmpty() ? 0 : f.getSizes().get(0).getPrice();
-        h.tvPrice.setText(String.format("%.2f VND", price));
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        h.tvPrice.setText(nf.format(price) + " VND");
+
+        h.tvDescription.setText(f.getDescription());
 
         Glide.with(h.itemView).load(f.getImageUrl()).into(h.ivFood);
 
@@ -59,13 +65,14 @@ public class FoodAdapter extends RecyclerView.Adapter<FoodAdapter.FoodViewHolder
     @Override public int getItemCount() { return list.size(); }
     static class FoodViewHolder extends RecyclerView.ViewHolder {
         ImageView ivFood;
-        TextView tvName, tvPrice;
+        TextView tvName, tvPrice, tvDescription;
         ImageButton btnAdd;
         FoodViewHolder(View v) {
             super(v);
             ivFood = v.findViewById(R.id.ivFood);
             tvName = v.findViewById(R.id.tvFoodName);
             tvPrice = v.findViewById(R.id.tvFoodPrice);
+            tvDescription = v.findViewById(R.id.tvDescription);
             btnAdd = v.findViewById(R.id.btnAdd);
         }
     }

@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">demo_fbfmobile</string>
     <string name="home_action">Home</string>
-    <string name="food_action">Fome</string>
+    <string name="food_action">Food</string>
+    <string name="cart_action">Cart</string>
     <string name="favorite_action">Favorite</string>
     <string name="order_action">Order</string>
     <string name="help_action">Help</string>
@@ -13,4 +14,5 @@
     <string name="onboarding_c_desc">Fast delivery to your door</string>
     <string name="onboarding_a_btndesc">Next</string>
     <string name="onboarding_c_btndesc">Get Started</string>
+    <string name="api_server_ip">192.168.53.23</string>
 </resources>

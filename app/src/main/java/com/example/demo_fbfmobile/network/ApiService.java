@@ -80,23 +80,50 @@ public interface ApiService {
             @Query("sort") String sort   // e.g. "createdAt,desc"
     );
 
+    @POST("/api/v1/cart-items/add")
+    Call<ApiResponse<CartItemDto>> addCartItem(
+            @Header("Authorization") String bearerToken,
+            @Body CartItemRequest request
+    );
     @GET("/api/v1/food/all")
     Call<PageResponse<FoodDto>> getAllFoods(
             @Query("page") int page,
             @Query("size") int size,
             @Query("sort") String sort);
 
-    @POST("/api/v1/cart-items/add")
-    Call<ApiResponse<CartItemDto>> addCartItem(
-            @Header("Authorization") String bearerToken,
-            @Body CartItemRequest request
-    );
-
     @GET("/api/v1/food/{id}")
     Call<ApiResponse<FoodDto>> getFoodDetailsById(@Path("id") Long id);
 
     @GET("/api/v1/order-item/get")
     Call<ApiResponse<List<OrderItemDetailDto>>> getOrderItemByOrderId(@Header("Authorization") String token, @Query("id") Long id);
+    @GET("/api/v1/food/search/category-id")
+    Call<PageResponse<FoodDto>> getFoodsByCategoryId(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("id") Long categoryId
+    );
+
+    @GET("/api/v1/food/search/full")
+    Call<PageResponse<FoodDto>> getFoodByFullFilter(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("min") double min,
+            @Query("max") double max,
+            @Query("name") String name,
+            @Query("categoryId") Long categoryId
+    );
+
+    @GET("/api/v1/food/search/by-price")
+    Call<PageResponse<FoodDto>> getFoodByPriceBetween(
+            @Query("page") int page,
+            @Query("size") int size,
+            @Query("sort") String sort,
+            @Query("min") double min,
+            @Query("max") double max
+    );
+
 
 }
 
