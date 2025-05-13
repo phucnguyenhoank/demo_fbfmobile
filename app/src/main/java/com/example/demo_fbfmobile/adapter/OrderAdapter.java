@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.demo_fbfmobile.HistoryOrderPaidActivity;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
+import com.example.demo_fbfmobile.ui.PaymentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +61,11 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             if ("PAID".equalsIgnoreCase(o.getStatus())) {
                 Log.d("Order Adapter", "onItemClick Success");
                 Intent intent = new Intent(v.getContext(), HistoryOrderPaidActivity.class);
+                intent.putExtra("orderId", o.getId());
+                v.getContext().startActivity(intent);
+            }
+            else{
+                Intent intent = new Intent(v.getContext(), PaymentActivity.class);
                 intent.putExtra("orderId", o.getId());
                 v.getContext().startActivity(intent);
             }

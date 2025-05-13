@@ -41,10 +41,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="163dp">
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHistoryOrderCartItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/rvHistoryOrderCartItem"/>
-    </LinearLayout>
+            android:layout_margin="8dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"/>
+        </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
