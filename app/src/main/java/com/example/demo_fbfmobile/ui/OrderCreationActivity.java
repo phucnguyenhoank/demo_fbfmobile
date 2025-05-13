@@ -150,6 +150,8 @@ public class OrderCreationActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     FbfOrderDto orderDto = response.body().getData();
                     Intent intent = new Intent(OrderCreationActivity.this, PaymentActivity.class);
+                    intent.putExtra("totalPrice", orderDto.getDiscountedTotalPrice());
+                    intent.putExtra("address", orderDto.getAddress());
                     intent.putExtra("orderId", orderDto.getId());
                     startActivity(intent);
                     finish();

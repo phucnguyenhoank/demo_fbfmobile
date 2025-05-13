@@ -124,6 +124,8 @@ public interface ApiService {
             @Query("max") double max
     );
 
+    @GET("/api/v1/fbf-orders/get")
+    Call<ApiResponse<FbfOrderDto>> getOrderByOrderId(@Header("Authorization") String token, @Query("orderId") Long orderId);
 
 }
 
