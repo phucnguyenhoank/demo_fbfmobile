@@ -39,13 +39,15 @@
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:layout_gravity="center"
+            android:background="@drawable/tab_container_background"
+            android:padding="4dp"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
             app:tabMode="fixed"
             app:tabGravity="fill"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/colorOrangeBase" />
+            app:tabTextColor="@color/colorOrangeBase"
+            app:tabSelectedTextColor="@color/white"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvOrders"

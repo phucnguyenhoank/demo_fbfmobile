@@ -22,6 +22,9 @@ import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 import com.google.android.material.tabs.TabLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -69,23 +72,86 @@ public class OrderHistoryFragment extends Fragment {
             requireActivity().onBackPressed();
             return;
         }
+        fetchOrderHistoryPaid(0, 20, "createdAt,desc");
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    fetchOrderHistoryPaid(0, 20, "createdAt,desc");
+                } else if (position == 1) {
+                    fetchOrderHistoryPending(0, 20, "createdAt,desc");
+                }
+            }
 
-        // Lấy lịch sử đơn hàng
-        fetchOrderHistory(0, 20, "createdAt,desc");
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                int position = tab.getPosition();
+                if (position == 0) {
+                    fetchOrderHistoryPaid(0, 20, "createdAt,desc");
+                } else if (position == 1) {
+                    fetchOrderHistoryPending(0, 20, "createdAt,desc");
+                }
+            }
+        });
+
+
 
         // Thiết lập sự kiện click cho nút back
         ivBack.setOnClickListener(v -> requireActivity().onBackPressed());
     }
 
-    private void fetchOrderHistory(int page, int size, String sort) {
+    private void fetchOrderHistoryPending(int page, int size, String sort) {
+        ApiService api = ApiClient.getApiService();
+        api.getOrderHistory("Bearer " + token, page, size, sort)
+                .enqueue(new Callback<PageResponse<FbfOrderDto>>() {
+                    @Override
+                    public void onResponse(Call<PageResponse<FbfOrderDto>> call, Response<PageResponse<FbfOrderDto>> res) {
+                        Log.d("Pending Oder History",res.body().toString());
+                        if (res.isSuccessful() && res.body() != null) {
+                            List<FbfOrderDto> data = res.body().getContent();
+                            List<FbfOrderDto> dataPending = new ArrayList<>();
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getStatus().equalsIgnoreCase("PENDING"))
+                                {
+                                    dataPending.add(data.get(i));
+                                }
+                            }
+                            adapter.setOrders(dataPending);
+                            Log.d("OrderHistoryFragment", "Pending Order history fetched successfully");
+                        } else {
+                            Toast.makeText(requireContext(), "Lỗi: " + res.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<FbfOrderDto>> call, Throwable t) {
+                        Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void fetchOrderHistoryPaid(int page, int size, String sort) {
         ApiService api = ApiClient.getApiService();
         api.getOrderHistory("Bearer " + token, page, size, sort)
                 .enqueue(new Callback<PageResponse<FbfOrderDto>>() {
                     @Override
                     public void onResponse(Call<PageResponse<FbfOrderDto>> call, Response<PageResponse<FbfOrderDto>> res) {
                         if (res.isSuccessful() && res.body() != null) {
-                            adapter.setOrders(res.body().getContent());
-                            Log.d("OrderHistoryFragment", "Order history fetched successfully");
+                            List<FbfOrderDto> data = res.body().getContent();
+                            List<FbfOrderDto> dataPaid = new ArrayList<>();
+                            for (int i = 0; i < data.size(); i++) {
+                                   if (data.get(i).getStatus().equalsIgnoreCase("Paid"))
+                                   {
+                                       dataPaid.add(data.get(i));
+                                   }
+                            }
+                            adapter.setOrders(dataPaid);
+                            Log.d("OrderHistoryFragment", "Paid Order history fetched successfully");
                         } else {
                             Toast.makeText(requireContext(), "Lỗi: " + res.code(), Toast.LENGTH_SHORT).show();
                         }
