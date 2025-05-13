@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.demo_fbfmobile.MainActivity;
@@ -27,9 +28,15 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import android.graphics.Paint;
+
 
 public class FoodDetailActivity extends AppCompatActivity {
 
@@ -139,14 +146,36 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void updatePriceAndStock(FoodSizeDto size) {
-        double orig = size.getPrice() / (1 - size.getDiscountPercentage() / 100);
-        tvOriginalPrice.setText(String.format("%.2f", orig));
-        tvDiscountedPrice.setText(String.format("%.2f", size.getPrice()));
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        double originalPrice = size.getPrice();
+        double discountedPrice = originalPrice * (1 - size.getDiscountPercentage() / 100.0);
+        double discountAmount = originalPrice - discountedPrice;
+
+        // Nếu giảm ít nhất 1000 VND thì hiển thị cả giá gốc và giá giảm
+        if (discountAmount >= 1000) {
+            tvOriginalPrice.setVisibility(View.VISIBLE);
+            tvDiscountedPrice.setVisibility(View.VISIBLE);
+
+            tvOriginalPrice.setText(nf.format(originalPrice) + " VND");
+            tvOriginalPrice.setTextColor(ContextCompat.getColor(this, R.color.yellow_primary));
+            tvOriginalPrice.setPaintFlags(tvOriginalPrice.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+            tvDiscountedPrice.setText(nf.format(discountedPrice) + " VND (-" + size.getDiscountPercentage() + "%)");
+            tvDiscountedPrice.setTextColor(ContextCompat.getColor(this, R.color.orange_primary));
+        } else {
+            // Nếu giảm không đủ 1000 VND, chỉ hiển thị giá gốc như là giá chính
+            tvOriginalPrice.setVisibility(View.GONE);  // Ẩn giá gốc
+            tvDiscountedPrice.setVisibility(View.VISIBLE);
+            tvDiscountedPrice.setText(nf.format(originalPrice) + " VND");
+            tvDiscountedPrice.setTextColor(ContextCompat.getColor(this, R.color.yellow_primary));
+        }
+
         tvStock.setText("Còn lại: " + size.getStock());
         currentSize = size;
         selectedQuantity = 1;
         tvQuantity.setText("1");
     }
+
 
     private void addToCart() {
         if (currentSize == null) { Toast.makeText(this, "Chưa chọn size", Toast.LENGTH_SHORT).show(); return; }

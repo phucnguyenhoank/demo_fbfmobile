@@ -65,17 +65,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        LinearLayout category1 = view.findViewById(R.id.category1);
-        LinearLayout category2 = view.findViewById(R.id.category2);
-        LinearLayout category3 = view.findViewById(R.id.category3);
-        LinearLayout category4 = view.findViewById(R.id.category4);
-        LinearLayout category5 = view.findViewById(R.id.category5);
-        categories = Arrays.asList(category1, category2, category3, category4, category5);
-
-        // Return the root view
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -92,6 +82,7 @@ public class HomeFragment extends Fragment {
         LinearLayout category3 = view.findViewById(R.id.category3);
         LinearLayout category4 = view.findViewById(R.id.category4);
         LinearLayout category5 = view.findViewById(R.id.category5);
+        categories = Arrays.asList(category1, category2, category3, category4, category5);
         rvFoods = view.findViewById(R.id.rvFoods);
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.mybottomnavigation);
 
