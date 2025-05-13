@@ -7,6 +7,7 @@ import android.view.View;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +58,14 @@ public class LoginActivity extends AppCompatActivity {
         });
         apiService = ApiClient.getClient().create(ApiService.class);
         btnLogin.setOnClickListener(v -> authenticateUser());
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Quay lại Activity trước đó
+                finish();
+            }
+        });
     }
 
     private void authenticateUser() {
@@ -80,8 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                     // Navigate to HomeActivity
                     Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish(); // prevent back to login
                 } else {
                     Toast.makeText(LoginActivity.this, "Login failed!", Toast.LENGTH_SHORT).show();
                 }

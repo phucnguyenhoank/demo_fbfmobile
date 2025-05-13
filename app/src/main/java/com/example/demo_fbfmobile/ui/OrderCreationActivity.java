@@ -150,9 +150,10 @@ public class OrderCreationActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     FbfOrderDto orderDto = response.body().getData();
                     Intent intent = new Intent(OrderCreationActivity.this, PaymentActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     intent.putExtra("orderId", orderDto.getId());
                     startActivity(intent);
-                    finish();
+//                    finish();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(OrderCreationActivity.this, "Tạo đơn hàng thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();

@@ -14,9 +14,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,6 +30,7 @@ import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.ui.CartActivity;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.LoginActivity;
+import com.example.demo_fbfmobile.ui.OrderHistoryActivity;
 import com.example.demo_fbfmobile.ui.ProfileActivity;
 import com.example.demo_fbfmobile.utils.TokenManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -53,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
     private double currentMinPrice = 0, currentMaxPrice = 30000;
     private String currentSearchFoodName = "";
     private Long currentSearchCategoryId = 0L;
-
     private SearchView svFoodName;
 
     @Override
@@ -62,7 +64,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         svFoodName = findViewById(R.id.svFoodName);
-
         svFoodName.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -157,7 +158,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Favorites", Toast.LENGTH_SHORT).show();
                 return true;
             } else if (id == R.id.menuorder) {
-                Toast.makeText(this, "Orders", Toast.LENGTH_SHORT).show();
+                TokenManager tokenManager = new TokenManager(MainActivity.this);
+                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                    Intent intent = new Intent(MainActivity.this, OrderHistoryActivity.class);
+                    startActivity(intent);
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
                 return true;
             } else if (id == R.id.menuhelp) {
                 Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();

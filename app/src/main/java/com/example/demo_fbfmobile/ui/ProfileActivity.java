@@ -1,5 +1,6 @@
 package com.example.demo_fbfmobile.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +13,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.demo_fbfmobile.MainActivity;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.FbfUserDto;
@@ -66,6 +68,18 @@ public class ProfileActivity extends AppCompatActivity {
             } else {
                 updateUser(newPhone, newAddress);
             }
+        });
+
+        Button btnLogout = findViewById(R.id.btnLogout);
+        btnLogout.setOnClickListener(v -> {
+            // Clear token
+            TokenManager tokenManager = new TokenManager(ProfileActivity.this);
+            tokenManager.clearToken();
+
+            // Go back to LoginActivity
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+            startActivity(intent);
         });
     }
 
