@@ -26,6 +26,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.adapter.FoodAdapter;
 import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.model.CartItemRequest;
 import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.network.ApiClient;
@@ -63,17 +65,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-
-        LinearLayout category1 = view.findViewById(R.id.category1);
-        LinearLayout category2 = view.findViewById(R.id.category2);
-        LinearLayout category3 = view.findViewById(R.id.category3);
-        LinearLayout category4 = view.findViewById(R.id.category4);
-        LinearLayout category5 = view.findViewById(R.id.category5);
-        categories = Arrays.asList(category1, category2, category3, category4, category5);
-
-        // Return the root view
-        return view;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
@@ -90,6 +82,7 @@ public class HomeFragment extends Fragment {
         LinearLayout category3 = view.findViewById(R.id.category3);
         LinearLayout category4 = view.findViewById(R.id.category4);
         LinearLayout category5 = view.findViewById(R.id.category5);
+        categories = Arrays.asList(category1, category2, category3, category4, category5);
         rvFoods = view.findViewById(R.id.rvFoods);
         BottomNavigationView bottomNavigationView = view.findViewById(R.id.mybottomnavigation);
 
@@ -136,16 +129,35 @@ public class HomeFragment extends Fragment {
         adapter = new FoodAdapter();
         rvFoods.setAdapter(adapter);
         rvFoods.setLayoutManager(new LinearLayoutManager(requireContext()));
+
+        // Khi nhấn + thêm hàng vào giỏ
         adapter.setOnAddClickListener(food -> {
             TokenManager tokenManager = new TokenManager(requireContext());
-            if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-                Intent intent = new Intent(requireContext(), HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(requireContext(), LoginActivity.class);
-                startActivity(intent);
+            String token = tokenManager.getToken();
+            if (token == null) {
+                Toast.makeText(requireContext(), "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                return;
             }
+
+            Long sizeId = food.getSizes().get(0).getId();
+            CartItemRequest req = new CartItemRequest(sizeId, 1);
+
+            api.addCartItem("Bearer " + token, req)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<CartItemDto>> call, Response<ApiResponse<CartItemDto>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(requireContext(), "Added to cart: " + response.body().getData().getId(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(requireContext(), "Add failed: " + response.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ApiResponse<CartItemDto>> call, Throwable t) {
+                        Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
         });
 
         // Khởi tạo API
