@@ -3,7 +3,9 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -60,8 +62,17 @@ public class OrderHistoryActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tabLayout);
         adapter     = new OrderAdapter();
         rvOrders.setAdapter(adapter);
-        tabLayout.addTab(tabLayout.newTab().setText("Paid"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pending"));
+//        tabLayout.addTab(tabLayout.newTab().setText("PAID"));
+//        tabLayout.addTab(tabLayout.newTab().setText("PENDING"));
+        String[] tabTitles = {"PAID", "PEND"};
+        for (String title : tabTitles) {
+            TabLayout.Tab tab = tabLayout.newTab();
+            View customTabView = LayoutInflater.from(this).inflate(R.layout.item_tabintablayout, null);
+            TextView textView = customTabView.findViewById(R.id.tab_text);
+            textView.setText(title);
+            tab.setCustomView(customTabView);
+            tabLayout.addTab(tab);
+        }
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {

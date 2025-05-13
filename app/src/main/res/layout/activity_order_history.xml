@@ -41,7 +41,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/tab_container_background"
-            android:padding="4dp"
             app:tabBackground="@drawable/tab_background"
             app:tabIndicatorHeight="0dp"
             app:tabMode="fixed"

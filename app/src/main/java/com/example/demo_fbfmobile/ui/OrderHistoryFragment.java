@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -56,8 +57,17 @@ public class OrderHistoryFragment extends Fragment {
         rvOrders = view.findViewById(R.id.rvOrders);
 
         // Thiết lập TabLayout
-        tabLayout.addTab(tabLayout.newTab().setText("Paid"));
-        tabLayout.addTab(tabLayout.newTab().setText("Pending"));
+        String[] tabTitles = {"PAID", "PENDING"};
+        for (String title : tabTitles) {
+            TabLayout.Tab tab = tabLayout.newTab();
+
+            View customTabView = LayoutInflater.from(requireContext()).inflate(R.layout.item_tabintablayout, null);
+            TextView textView = customTabView.findViewById(R.id.tab_text);
+            textView.setText(title);
+
+            tab.setCustomView(customTabView);
+            tabLayout.addTab(tab);
+        }
 
         // Thiết lập RecyclerView
         adapter = new OrderAdapter();
