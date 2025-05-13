@@ -2,12 +2,16 @@ package com.example.demo_fbfmobile.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -66,20 +70,46 @@ public class ProfileActivity extends AppCompatActivity {
             if (newPhone.isEmpty() || newAddress.isEmpty()) {
                 Toast.makeText(this, "Phone and address cannot be empty", Toast.LENGTH_SHORT).show();
             } else {
+                // 1. Clear focus
+                etPhone.clearFocus();
+                etAddress.clearFocus();
+
+                // 2. Hide keyboard
+                View view = this.getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+
+                // 3. Gửi request
                 updateUser(newPhone, newAddress);
             }
         });
 
+
         Button btnLogout = findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(v -> {
-            // Clear token
-            TokenManager tokenManager = new TokenManager(ProfileActivity.this);
-            tokenManager.clearToken();
+            new AlertDialog.Builder(ProfileActivity.this)
+                    .setTitle("Xác nhận đăng xuất")
+                    .setMessage("Bạn có chắc chắn muốn đăng xuất?")
+                    .setPositiveButton("Đồng ý", (dialog, which) -> {
+                        TokenManager tokenManager = new TokenManager(ProfileActivity.this);
+                        tokenManager.clearToken();
+                        // Go back to LoginActivity
+                        Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    })
+                    .setNegativeButton("Hủy", null)
+                    .show();
+        });
 
-            // Go back to LoginActivity
-            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
-            startActivity(intent);
+        ImageView ivBack = findViewById(R.id.ivBack);
+        ivBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish(); // Quay lại activity trước đó
+            }
         });
     }
 

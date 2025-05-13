@@ -3,6 +3,7 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.view.View;
 import android.util.Log;
 import android.widget.Button;
@@ -38,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private ApiService apiService;
     private TextView txtDangky;
 
+    final boolean[] isPasswordVisible = {false};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,9 +66,24 @@ public class LoginActivity extends AppCompatActivity {
         backButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Quay lại Activity trước đó
                 finish();
             }
+        });
+
+        ImageView ivTogglePassword = findViewById(R.id.ivTogglePassword);
+        ivTogglePassword.setOnClickListener(v -> {
+            if (isPasswordVisible[0]) {
+                // Đang hiển thị, chuyển về ẩn
+                etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                ivTogglePassword.setImageResource(R.drawable.eye_off);
+            } else {
+                // Đang ẩn, chuyển về hiển thị
+                etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+                ivTogglePassword.setImageResource(R.drawable.eye_on);
+            }
+            // Giữ lại con trỏ ở cuối chuỗi
+            etPassword.setSelection(etPassword.length());
+            isPasswordVisible[0] = !isPasswordVisible[0];
         });
     }
 

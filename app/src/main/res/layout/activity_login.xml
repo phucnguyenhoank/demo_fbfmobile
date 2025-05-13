@@ -15,6 +15,7 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="44dp"
         android:src="@drawable/backiconarrow"
+        android:background="@color/yellow_primary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -33,7 +34,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="163dp"
+        android:layout_marginTop="100dp"
         android:orientation="vertical"
         android:paddingTop="30dp"
         android:paddingStart="30dp"
@@ -71,6 +72,7 @@
             android:layout_height="45dp"
             android:paddingLeft="20dp"
             android:background="@drawable/layout_edittext"
+            android:singleLine="true"
             android:hint="Tên Đăng Nhập" />
 
         <TextView
@@ -96,6 +98,7 @@
                 android:paddingEnd="40dp"
                 android:textSize="20sp"
                 android:textColor="@color/black"
+                android:singleLine="true"
                 android:inputType="textPassword" />
 
             <ImageView
@@ -104,13 +107,13 @@
                 android:layout_height="24dp"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="10dp"
-                android:src="@drawable/close_eye"
+                android:src="@drawable/eye_on"
                 android:contentDescription="Toggle Password Visibility" />
         </FrameLayout>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="220dp"
             android:textColor="@color/colorOrangeBase"
             android:textStyle="bold"
@@ -118,7 +121,7 @@
             android:onClick="onForgotPasswordClick"
             />
         <Button
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:id="@+id/btnLogin"
             android:layout_width="207dp"
             android:layout_height="wrap_content"
@@ -133,7 +136,7 @@
             android:layout_height="wrap_content"
             android:text="hoặc đăng nhập bằng"
             android:gravity="center"
-            android:layout_marginTop="46dp"/>
+            android:layout_marginTop="24dp"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

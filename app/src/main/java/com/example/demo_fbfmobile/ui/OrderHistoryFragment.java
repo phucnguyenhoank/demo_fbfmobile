@@ -36,7 +36,6 @@ public class OrderHistoryFragment extends Fragment {
     private OrderAdapter adapter;
     private String token;
     private TabLayout tabLayout;
-    private ImageView ivBack;
 
     public OrderHistoryFragment() {
         // Required empty public constructor
@@ -52,7 +51,6 @@ public class OrderHistoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Khởi tạo views
-        ivBack = view.findViewById(R.id.ivBack);
         tabLayout = view.findViewById(R.id.tabLayout);
         rvOrders = view.findViewById(R.id.rvOrders);
 
@@ -109,11 +107,6 @@ public class OrderHistoryFragment extends Fragment {
                 }
             }
         });
-
-
-
-        // Thiết lập sự kiện click cho nút back
-        ivBack.setOnClickListener(v -> requireActivity().onBackPressed());
     }
 
     private void fetchOrderHistoryPending(int page, int size, String sort) {

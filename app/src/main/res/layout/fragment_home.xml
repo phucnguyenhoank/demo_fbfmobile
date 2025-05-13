@@ -16,10 +16,14 @@
         android:layout_height="wrap_content"
         android:text="Welcome,"
         android:textSize="18sp"
-        android:textColor="@color/orange_primary"
+        android:textColor="@color/gray_light"
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="8dp"
+        android:shadowColor="#80000000"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:shadowRadius="1.5"/>
 
     <!-- Search and Filter -->
     <LinearLayout

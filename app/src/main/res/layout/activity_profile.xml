@@ -1,80 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView  xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorYellowBase"
     tools:context=".ui.ProfileActivity">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/ivBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:background="@color/yellow_primary"
+        android:src="@drawable/backiconarrow"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Thông tin cá nhân"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/userInfoContent"
+        android:background="@drawable/loginlayout"
+        android:layout_marginTop="100dp"
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:layout_height="match_parent">
         <!-- ID -->
         <TextView
             android:id="@+id/tvLabelId"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="ID:"/>
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Mã khách hàng:"/>
         <TextView
             android:id="@+id/tvId"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content" />
 
         <!-- Username -->
         <TextView
             android:id="@+id/tvLabelUsername"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Username:"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Tên đăng nhập:"/>
         <TextView
             android:id="@+id/tvUsername"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content"/>
 
         <!-- Email -->
         <TextView
             android:id="@+id/tvLabelEmail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email:"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Email:"/>
         <TextView
             android:id="@+id/tvEmail"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content"/>
 
         <!-- Name -->
         <TextView
             android:id="@+id/tvLabelName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name:"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Tên:"/>
         <TextView
             android:id="@+id/tvName"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content"/>
 
         <!-- Role -->
         <TextView
             android:id="@+id/tvLabelRole"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Role:"
-            android:layout_marginTop="8dp"/>
+            android:layout_marginTop="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Role:"/>
         <TextView
             android:id="@+id/tvRole"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="bold"/>
+            android:layout_height="wrap_content"/>
 
         <!-- Divider -->
         <View
@@ -88,11 +127,19 @@
             android:id="@+id/tvLabelPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone number"/>
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="Số điện thoại"/>
         <EditText
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_height="45dp"
+            android:paddingLeft="20dp"
+            android:background="@drawable/layout_edittext"
+            android:singleLine="true"
             android:inputType="phone"/>
 
         <!-- Editable Address -->
@@ -100,12 +147,19 @@
             android:id="@+id/tvLabelAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Address"
-            android:layout_marginTop="8dp"/>
+            android:text="Địa chỉ"
+            android:layout_marginBottom="8dp"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/black"/>
         <EditText
             android:id="@+id/etAddress"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:textColor="@color/black"
+            android:layout_height="45dp"
+            android:paddingLeft="20dp"
+            android:background="@drawable/layout_edittext"
+            android:singleLine="true"
             android:inputType="textPostalAddress"/>
 
         <!-- Save button -->
@@ -113,7 +167,10 @@
             android:id="@+id/btnSave"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Save"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="Lưu"
             android:layout_marginTop="16dp"/>
 
         <!-- Logout button -->
@@ -121,8 +178,13 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Logout"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:text="Đăng xuất"
             android:layout_marginTop="16dp"/>
+
     </LinearLayout>
 
-</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
