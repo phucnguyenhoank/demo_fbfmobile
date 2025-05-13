@@ -119,7 +119,6 @@ public class HomeFragment extends Fragment {
         ivFilter.setOnClickListener(v -> showFilterBottomSheet());
 
         // Thiết lập danh mục
-//        List<LinearLayout> categories = Arrays.asList(category1, category2, category3, category4, category5);
         for (int i = 0; i < categories.size(); i++) {
             final int categoryId = i + 1;
             LinearLayout categoryView = categories.get(i);

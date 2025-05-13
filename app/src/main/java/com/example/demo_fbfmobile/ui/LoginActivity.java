@@ -18,6 +18,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.demo_fbfmobile.MainActivity;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.AuthenticationRequest;
@@ -84,11 +85,8 @@ public class LoginActivity extends AppCompatActivity {
                     TokenManager tokenManager = new TokenManager(LoginActivity.this);
                     tokenManager.saveToken(token);
                     Log.d("LoginActivity", "Token saved: " + token);
-
-                    // ✅ Now you can navigate to the next screen or home
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                    // Navigate to HomeActivity
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 } else {

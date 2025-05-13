@@ -1,13 +1,17 @@
 package com.example.demo_fbfmobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.demo_fbfmobile.ui.CartFragment;
+import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.HomeFragment;
+import com.example.demo_fbfmobile.ui.LoginActivity;
 import com.example.demo_fbfmobile.ui.OrderHistoryFragment;
+import com.example.demo_fbfmobile.utils.TokenManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -26,10 +30,25 @@ public class MainActivity extends AppCompatActivity {
 
             if (id == R.id.menu_home) {
                 selectedFragment = new HomeFragment();
+
             } else if (id == R.id.menu_cart) {
-                selectedFragment = new CartFragment();
+                TokenManager tokenManager = new TokenManager(MainActivity.this);
+                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                    selectedFragment = new CartFragment();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
             } else if (id == R.id.menu_order_history) {
-                selectedFragment = new OrderHistoryFragment();
+                TokenManager tokenManager = new TokenManager(MainActivity.this);
+                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                    selectedFragment = new OrderHistoryFragment();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
+
             }
 
             if (selectedFragment != null) {
