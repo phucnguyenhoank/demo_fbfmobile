@@ -11,7 +11,7 @@
         android:id="@+id/mybottomnavigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/menu_bottom"
+        app:menu="@menu/bottom_nav_menu"
         app:layout_constraintEnd_toEndOf="parent"
         app:itemIconTint="@color/white"
         android:background="@drawable/bottom_nav_background"

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -17,8 +19,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeFragment extends Fragment {
 
     private RecyclerView rvFoods;
     private FoodAdapter adapter;
@@ -51,19 +52,49 @@ public class HomeActivity extends AppCompatActivity {
     private double currentMinPrice = 0, currentMaxPrice = 30000;
     private String currentSearchFoodName = "";
     private Long currentSearchCategoryId = 0L;
-    private SearchView svFoodName;
-
+    private androidx.appcompat.widget.SearchView svFoodName;
     private TextView tvSimpleUserInfo;
 
+    List<LinearLayout> categories;
+
+    public HomeFragment() {
+        // Required empty public constructor
+    }
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        tvSimpleUserInfo = findViewById(R.id.tvSimpleUserInfo);
+        LinearLayout category1 = view.findViewById(R.id.category1);
+        LinearLayout category2 = view.findViewById(R.id.category2);
+        LinearLayout category3 = view.findViewById(R.id.category3);
+        LinearLayout category4 = view.findViewById(R.id.category4);
+        LinearLayout category5 = view.findViewById(R.id.category5);
+        categories = Arrays.asList(category1, category2, category3, category4, category5);
 
-        svFoodName = findViewById(R.id.svFoodName);
-        svFoodName.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        // Return the root view
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Khởi tạo views
+        tvSimpleUserInfo = view.findViewById(R.id.tvSimpleUserInfo);
+        svFoodName = view.findViewById(R.id.svFoodName);
+        ImageView ivFilter = view.findViewById(R.id.ivFilter);
+        ImageView ivProfile = view.findViewById(R.id.ivProfile);
+        LinearLayout category1 = view.findViewById(R.id.category1);
+        LinearLayout category2 = view.findViewById(R.id.category2);
+        LinearLayout category3 = view.findViewById(R.id.category3);
+        LinearLayout category4 = view.findViewById(R.id.category4);
+        LinearLayout category5 = view.findViewById(R.id.category5);
+        rvFoods = view.findViewById(R.id.rvFoods);
+        BottomNavigationView bottomNavigationView = view.findViewById(R.id.mybottomnavigation);
+
+        // Thiết lập SearchView
+        svFoodName.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 handleSearch(query);
@@ -75,7 +106,6 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
-        // Ép xử lý khi nhấn phím Enter, kể cả khi không nhập gì
         EditText searchEditText = svFoodName.findViewById(androidx.appcompat.R.id.search_src_text);
         searchEditText.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_SEARCH) {
@@ -85,101 +115,53 @@ public class HomeActivity extends AppCompatActivity {
             return false;
         });
 
-        ImageView ivFilter = findViewById(R.id.ivFilter);
+        // Thiết lập nút filter
         ivFilter.setOnClickListener(v -> showFilterBottomSheet());
 
-        LinearLayout category1 = findViewById(R.id.category1);
-        LinearLayout category2 = findViewById(R.id.category2);
-        LinearLayout category3 = findViewById(R.id.category3);
-        LinearLayout category4 = findViewById(R.id.category4);
-        LinearLayout category5 = findViewById(R.id.category5);
-        List<LinearLayout> categories = Arrays.asList(category1, category2, category3, category4, category5);
-
+        // Thiết lập danh mục
+//        List<LinearLayout> categories = Arrays.asList(category1, category2, category3, category4, category5);
         for (int i = 0; i < categories.size(); i++) {
-            final int categoryId = i + 1; // ID bắt đầu từ 1
+            final int categoryId = i + 1;
             LinearLayout categoryView = categories.get(i);
-
             categoryView.setOnClickListener(v -> {
                 currentSearchCategoryId = (long) categoryId;
                 fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption, currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
                 for (LinearLayout cat : categories) {
-                    cat.setBackgroundResource(R.drawable.bg_rounded_category); // reset
+                    cat.setBackgroundResource(R.drawable.bg_rounded_category);
                 }
-                v.setBackgroundResource(R.drawable.bg_rounded_category_selected); // chọn
+                v.setBackgroundResource(R.drawable.bg_rounded_category_selected);
             });
         }
 
-        rvFoods = findViewById(R.id.rvFoods);
+        // Thiết lập RecyclerView
         adapter = new FoodAdapter();
         rvFoods.setAdapter(adapter);
-        rvFoods.setLayoutManager(new LinearLayoutManager(this));
-
-        // Khi nhấn +
+        rvFoods.setLayoutManager(new LinearLayoutManager(requireContext()));
         adapter.setOnAddClickListener(food -> {
-            TokenManager tokenManager = new TokenManager(HomeActivity.this);
+            TokenManager tokenManager = new TokenManager(requireContext());
             if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
+                Intent intent = new Intent(requireContext(), HomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
             } else {
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+                Intent intent = new Intent(requireContext(), LoginActivity.class);
                 startActivity(intent);
             }
         });
 
+        // Khởi tạo API
         api = ApiClient.getClient().create(ApiService.class);
 
+        // Gọi các phương thức ban đầu
         callSecuredEndpoint();
-
         fetchFoodsByFullFilter(0, currentPageSize, "", currentMinPrice, currentMaxPrice, "", 0L);
 
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.mybottomnavigation);
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int id = item.getItemId();
-//
-//            if (id == R.id.menu_home) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    recreate();
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_cart) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_favorite) {
-//                Toast.makeText(this, "Favorites", Toast.LENGTH_SHORT).show();
-//                return true;
-//            } else if (id == R.id.menu_order_history) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_help) {
-//                Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//            return false;
-//        });
-
+        // Thiết lập sự kiện click cho ivProfile
+        ivProfile.setOnClickListener(this::onProfileClick);
     }
 
     private void callSecuredEndpoint() {
-        TokenManager tokenManager = new TokenManager(this);
+        TokenManager tokenManager = new TokenManager(requireContext());
         String token = tokenManager.getToken();
         if (token != null) {
             Call<ApiResponse<String>> call = api.getSecuredData("Bearer " + token);
@@ -187,10 +169,8 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(@NonNull Call<ApiResponse<String>> call, @NonNull Response<ApiResponse<String>> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        String securedData = response.body().getData();
                         String username = tokenManager.getUsername();
-                        boolean expired = tokenManager.isTokenExpired();
-                        String displayText = "Chào buổi sáng, " + username; //  + "\nUser: " + username + "\nExpired: " + expired;
+                        String displayText = "Chào buổi sáng, " + username;
                         tvSimpleUserInfo.setText(displayText);
                     } else {
                         tvSimpleUserInfo.setText("❌ Failed to access secured API");
@@ -202,27 +182,31 @@ public class HomeActivity extends AppCompatActivity {
                     tvSimpleUserInfo.setText("⚠️ Error: " + t.getMessage());
                 }
             });
-        }
-        else {
+        } else {
             tvSimpleUserInfo.setText("No token found. Please login.");
         }
     }
 
-    private void fetchAllFoods(int page, int size, String sort) {
-        api.getAllFoods(page, size, sort)
-                .enqueue(new Callback<PageResponse<FoodDto>>() {
+    private void fetchFoodsByFullFilter(int page, int size, String sort, double min, double max, String foodName, Long categoryId) {
+        api.getFoodByFullFilter(page, size, sort, min, max, foodName, categoryId)
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(Call<PageResponse<FoodDto>> call, Response<PageResponse<FoodDto>> res) {
                         if (res.isSuccessful() && res.body() != null) {
                             adapter.setData(res.body().getContent());
                         } else {
-                            Toast.makeText(HomeActivity.this, "Fetch failed: " + res.code(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(requireContext(), "Không lấy được dữ liệu theo giá: " + res.code(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PageResponse<FoodDto>> call, Throwable t) {
-                        Toast.makeText(HomeActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle("Lỗi mạng")
+                                .setMessage("Không thể tải món ăn theo giá.\nKiểm tra kết nối mạng.")
+                                .setPositiveButton("Thử lại", (dialog, which) -> fetchFoodsByFullFilter(page, size, sort, min, max, foodName, categoryId))
+                                .setCancelable(false)
+                                .show();
                     }
                 });
     }
@@ -232,18 +216,17 @@ public class HomeActivity extends AppCompatActivity {
         fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption, currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
 
         svFoodName.clearFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(svFoodName.getWindowToken(), 0);
         }
     }
 
     private void showFilterBottomSheet() {
-        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
         View bottomSheetView = getLayoutInflater().inflate(R.layout.filter_bottom_sheet, null);
         bottomSheetDialog.setContentView(bottomSheetView);
 
-        // Khởi tạo các view trong bottom sheet
         Slider priceMinSlider = bottomSheetView.findViewById(R.id.priceMinSlider);
         Slider priceMaxSlider = bottomSheetView.findViewById(R.id.priceMaxSlider);
         RadioGroup radioFieldSort = bottomSheetView.findViewById(R.id.radioFieldSort);
@@ -251,11 +234,9 @@ public class HomeActivity extends AppCompatActivity {
         Button btnApplyFilter = bottomSheetView.findViewById(R.id.btnApplyFilter);
         Button btnClearFilter = bottomSheetView.findViewById(R.id.btnClearFilter);
 
-        // Đặt giá trị hiện tại cho slider
         priceMinSlider.setValue((float) currentMinPrice);
         priceMaxSlider.setValue((float) currentMaxPrice);
 
-        // Đặt giá trị hiện tại cho radio buttons
         if (!currentSortOption.isEmpty()) {
             String[] parts = currentSortOption.split(",");
             if (parts.length == 2) {
@@ -277,12 +258,9 @@ public class HomeActivity extends AppCompatActivity {
             radioDirectionSort.clearCheck();
         }
 
-        // Xử lý sự kiện nút Áp dụng
         btnApplyFilter.setOnClickListener(view -> {
             float minPrice = priceMinSlider.getValue();
             float maxPrice = priceMaxSlider.getValue();
-
-            // Lưu lại để lần sau còn hiển thị đúng
             currentMinPrice = minPrice;
             currentMaxPrice = maxPrice;
 
@@ -301,32 +279,22 @@ public class HomeActivity extends AppCompatActivity {
             bottomSheetDialog.dismiss();
         });
 
-        // Xử lý sự kiện nút Xóa bộ lọc
         btnClearFilter.setOnClickListener(view -> {
-            // Đặt lại tất cả các biến lọc về giá trị mặc định
             currentSortOption = "";
             currentMinPrice = 0;
             currentMaxPrice = 300000;
             currentSearchFoodName = "";
             currentSearchCategoryId = 0L;
 
-            // Cập nhật UI
             updateSortText();
             svFoodName.setQuery("", false);
             svFoodName.clearFocus();
 
-            // Đặt lại background của các danh mục
-            LinearLayout category1 = findViewById(R.id.category1);
-            LinearLayout category2 = findViewById(R.id.category2);
-            LinearLayout category3 = findViewById(R.id.category3);
-            LinearLayout category4 = findViewById(R.id.category4);
-            LinearLayout category5 = findViewById(R.id.category5);
-            List<LinearLayout> categories = Arrays.asList(category1, category2, category3, category4, category5);
+
             for (LinearLayout cat : categories) {
                 cat.setBackgroundResource(R.drawable.bg_rounded_category);
             }
 
-            // Gọi API với các giá trị mặc định
             fetchFoodsByFullFilter(0, 10, "", 0, 300000, "", 0L);
             bottomSheetDialog.dismiss();
         });
@@ -334,48 +302,17 @@ public class HomeActivity extends AppCompatActivity {
         bottomSheetDialog.show();
     }
 
-    private void fetchFoodsByFullFilter(int page, int size, String sort, double min, double max, String foodName, Long categoryId) {
-        Log.i("HomeActivity", "p:" + page + ";s:" + size + ";so:" + sort + ";min:" + min + ";max:" + max + ";foodName:" + foodName + ";categoryId:" + categoryId);
-        api.getFoodByFullFilter(page, size, sort, min, max, foodName, categoryId)
-                .enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(Call<PageResponse<FoodDto>> call, Response<PageResponse<FoodDto>> res) {
-                        if (res.isSuccessful() && res.body() != null) {
-                            adapter.setData(res.body().getContent());
-                        } else {
-                            Toast.makeText(HomeActivity.this, "Không lấy được dữ liệu theo giá: " + res.code(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PageResponse<FoodDto>> call, Throwable t) {
-                        new AlertDialog.Builder(HomeActivity.this)
-                                .setTitle("Lỗi mạng")
-                                .setMessage("Không thể tải món ăn theo giá.\nKiểm tra kết nối mạng.")
-                                .setPositiveButton("Thử lại", (dialog, which) -> {
-                                    fetchFoodsByFullFilter(page, size, sort, min, max, foodName, categoryId);
-                                })
-                                .setCancelable(false)
-                                .show();
-                    }
-                });
-    }
-
     private void updateSortText() {
-        Log.d("SortDebug", "sortOption = " + currentSortOption);
-        TextView tvSort = findViewById(R.id.tvSort);
+        TextView tvSort = getView().findViewById(R.id.tvSort);
         tvSort.setText(currentSortOption);
     }
 
-    public void onProfileClick(View view) {
-        TokenManager tokenManager = new TokenManager(HomeActivity.this);
+    private void onProfileClick(View view) {
+        TokenManager tokenManager = new TokenManager(requireContext());
         if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-            Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), ProfileActivity.class));
         } else {
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(requireContext(), LoginActivity.class));
         }
     }
-
 }

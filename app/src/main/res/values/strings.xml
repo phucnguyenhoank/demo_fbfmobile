@@ -15,4 +15,6 @@
     <string name="onboarding_a_btndesc">Next</string>
     <string name="onboarding_c_btndesc">Get Started</string>
     <string name="api_server_ip">192.168.53.23</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/yellow_primary"
-    tools:context=".ui.HomeActivity">
+    tools:context=".ui.HomeFragment">
 
     <TextView
         android:id="@+id/tvSimpleUserInfo"
@@ -20,7 +20,6 @@
         android:textStyle="bold"
         android:fontFamily="sans-serif-medium"
         android:layout_marginTop="8dp"/>
-
 
     <!-- Search and Filter -->
     <LinearLayout
@@ -54,7 +53,6 @@
             android:src="@drawable/ic_filter"
             android:contentDescription="Filter" />
 
-
         <ImageView
             android:id="@+id/ivProfile"
             android:layout_width="wrap_content"
@@ -62,8 +60,7 @@
             android:layout_marginStart="8dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:padding="8dp"
-            android:src="@drawable/ic_profile"
-            android:onClick="onProfileClick"/>
+            android:src="@drawable/ic_profile"/>
     </LinearLayout>
 
     <!-- Categorical ScrollView and Food List-->
@@ -265,20 +262,5 @@
                 android:paddingBottom="16dp"/>
         </LinearLayout>
     </LinearLayout>
-
-    <!-- Container các nút navigation (có thể thu gọn) -->
-    <LinearLayout
-        android:id="@+id/btnContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-
-    </LinearLayout>
-
 
 </LinearLayout>
