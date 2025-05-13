@@ -50,7 +50,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         ImageView imageFood;
         TextView textFoodName, textPrice, textQuantity;
         Spinner spinnerSize;
-        Button btnDecrease, btnIncrease, btnDelete;
+        Button btnDecrease, btnIncrease;
+        ImageView btnDelete;
 
         CheckBox checkboxSelect;
 
@@ -81,7 +82,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.textFoodName.setText(item.getFoodName());
         NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
         holder.textPrice.setText("Đơn giá: " + nf.format(item.getPrice()) + " VND");
-        holder.textQuantity.setText("Số lượng: " + item.getQuantity());
+        holder.textQuantity.setText(item.getQuantity().toString());
         holder.checkboxSelect.setChecked(item.isSelected());
         holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
             item.setSelected(isChecked);
@@ -143,7 +144,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             CartItemDisplay currentItem = cartItems.get(adapterPosition);
             int newQuantity = currentItem.getQuantity() + 1;
             currentItem.setQuantity(newQuantity);
-            holder.textQuantity.setText("Số lượng: " + newQuantity);
+            holder.textQuantity.setText("" + newQuantity);
 
             CartItemUpdateRequest request = new CartItemUpdateRequest(currentItem.getId(), newQuantity, currentItem.getSize());
             ApiService apiService = ApiClient.getApiService();
@@ -157,7 +158,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                     CartItemDisplay item = cartItems.get(currentPosition);
                     if (!response.isSuccessful() || response.body() == null || !response.body().isSuccess()) {
                         item.setQuantity(newQuantity - 1);
-                        holder.textQuantity.setText("Số lượng: " + (newQuantity - 1));
+                        holder.textQuantity.setText("" + (newQuantity - 1));
                         Toast.makeText(context, "Cập nhật số lượng thất bại", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -169,7 +170,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
                     CartItemDisplay item = cartItems.get(currentPosition);
                     item.setQuantity(newQuantity - 1);
-                    holder.textQuantity.setText("Số lượng: " + (newQuantity - 1));
+                    holder.textQuantity.setText("" + (newQuantity - 1));
                     Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -185,7 +186,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             if (currentQuantity > 1) {
                 int newQuantity = currentQuantity - 1;
                 currentItem.setQuantity(newQuantity);
-                holder.textQuantity.setText("Số lượng: " + newQuantity);
+                holder.textQuantity.setText("" + newQuantity);
 
                 CartItemUpdateRequest request = new CartItemUpdateRequest(currentItem.getId(), newQuantity, currentItem.getSize());
                 ApiService apiService = ApiClient.getApiService();
@@ -199,7 +200,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                         CartItemDisplay item = cartItems.get(currentPosition);
                         if (!response.isSuccessful() || response.body() == null || !response.body().isSuccess()) {
                             item.setQuantity(currentQuantity);
-                            holder.textQuantity.setText("Số lượng: " + currentQuantity);
+                            holder.textQuantity.setText("" + currentQuantity);
                             Toast.makeText(context, "Cập nhật số lượng thất bại", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -211,7 +212,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
                         CartItemDisplay item = cartItems.get(currentPosition);
                         item.setQuantity(currentQuantity);
-                        holder.textQuantity.setText("Số lượng: " + currentQuantity);
+                        holder.textQuantity.setText("" + currentQuantity);
                         Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                     }
                 });
