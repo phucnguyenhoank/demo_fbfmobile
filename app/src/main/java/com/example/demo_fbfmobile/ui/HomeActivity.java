@@ -25,6 +25,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.adapter.FoodAdapter;
 import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.CartItemDto;
+import com.example.demo_fbfmobile.model.CartItemRequest;
 import com.example.demo_fbfmobile.model.FoodDto;
 import com.example.demo_fbfmobile.model.PageResponse;
 import com.example.demo_fbfmobile.network.ApiClient;
@@ -116,15 +118,36 @@ public class HomeActivity extends AppCompatActivity {
 
         // Khi nhấn +
         adapter.setOnAddClickListener(food -> {
-            TokenManager tokenManager = new TokenManager(HomeActivity.this);
-            if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-                Intent intent = new Intent(HomeActivity.this, HomeActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-            } else {
-                Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-                startActivity(intent);
+            TokenManager tokenManager = new TokenManager(this);
+            String token = tokenManager.getToken();
+            if (token == null) {
+                Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+                return;
             }
+            // Giả sử chọn size đầu tiên và quantity = 1
+            Long sizeId = food.getSizes().get(0).getId();
+            CartItemRequest req = new CartItemRequest(sizeId, 1);
+            api.addCartItem("Bearer " + token, req)
+                .enqueue(new Callback<>() {
+                    @Override
+                    public void onResponse(Call<ApiResponse<CartItemDto>> call,
+                                           Response<ApiResponse<CartItemDto>> response) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(HomeActivity.this,
+                                    "Added to cart: " + response.body().getData().getId(),
+                                    Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(HomeActivity.this,
+                                    "Add failed: " + response.code(),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<ApiResponse<CartItemDto>> call, Throwable t) {
+                        Toast.makeText(HomeActivity.this,
+                                "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
         });
 
         api = ApiClient.getClient().create(ApiService.class);
