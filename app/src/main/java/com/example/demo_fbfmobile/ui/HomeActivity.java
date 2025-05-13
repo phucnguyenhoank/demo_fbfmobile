@@ -133,49 +133,6 @@ public class HomeActivity extends AppCompatActivity {
 
         fetchFoodsByFullFilter(0, currentPageSize, "", currentMinPrice, currentMaxPrice, "", 0L);
 
-//        BottomNavigationView bottomNavigationView = findViewById(R.id.mybottomnavigation);
-//        bottomNavigationView.setOnItemSelectedListener(item -> {
-//            int id = item.getItemId();
-//
-//            if (id == R.id.menu_home) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    recreate();
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_cart) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    Intent intent = new Intent(HomeActivity.this, CartActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_favorite) {
-//                Toast.makeText(this, "Favorites", Toast.LENGTH_SHORT).show();
-//                return true;
-//            } else if (id == R.id.menu_order_history) {
-//                TokenManager tokenManager = new TokenManager(HomeActivity.this);
-//                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
-//                    Intent intent = new Intent(HomeActivity.this, OrderHistoryActivity.class);
-//                    startActivity(intent);
-//                } else {
-//                    Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-//                    startActivity(intent);
-//                }
-//                return true;
-//            } else if (id == R.id.menu_help) {
-//                Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show();
-//                return true;
-//            }
-//            return false;
-//        });
-
     }
 
     private void callSecuredEndpoint() {

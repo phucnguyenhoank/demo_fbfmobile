@@ -1,66 +1,100 @@
 package com.example.demo_fbfmobile.ui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.demo_fbfmobile.R;
+import com.example.demo_fbfmobile.adapter.OrderAdapter;
+import com.example.demo_fbfmobile.model.FbfOrderDto;
+import com.example.demo_fbfmobile.model.PageResponse;
+import com.example.demo_fbfmobile.network.ApiClient;
+import com.example.demo_fbfmobile.network.ApiService;
+import com.example.demo_fbfmobile.utils.TokenManager;
+import com.google.android.material.tabs.TabLayout;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link OrderHistoryFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class OrderHistoryFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView rvOrders;
+    private OrderAdapter adapter;
+    private String token;
+    private TabLayout tabLayout;
+    private ImageView ivBack;
 
     public OrderHistoryFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment OrderHistoryFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static OrderHistoryFragment newInstance(String param1, String param2) {
-        OrderHistoryFragment fragment = new OrderHistoryFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_order_history, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Khởi tạo views
+        ivBack = view.findViewById(R.id.ivBack);
+        tabLayout = view.findViewById(R.id.tabLayout);
+        rvOrders = view.findViewById(R.id.rvOrders);
+
+        // Thiết lập TabLayout
+        tabLayout.addTab(tabLayout.newTab().setText("Paid"));
+        tabLayout.addTab(tabLayout.newTab().setText("Pending"));
+
+        // Thiết lập RecyclerView
+        adapter = new OrderAdapter();
+        rvOrders.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvOrders.setAdapter(adapter);
+
+        // Lấy token
+        TokenManager tokenManager = new TokenManager(requireContext());
+        token = tokenManager.getToken();
+        if (token == null) {
+            Toast.makeText(requireContext(), "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            requireActivity().onBackPressed();
+            return;
+        }
+
+        // Lấy lịch sử đơn hàng
+        fetchOrderHistory(0, 20, "createdAt,desc");
+
+        // Thiết lập sự kiện click cho nút back
+        ivBack.setOnClickListener(v -> requireActivity().onBackPressed());
+    }
+
+    private void fetchOrderHistory(int page, int size, String sort) {
+        ApiService api = ApiClient.getApiService();
+        api.getOrderHistory("Bearer " + token, page, size, sort)
+                .enqueue(new Callback<PageResponse<FbfOrderDto>>() {
+                    @Override
+                    public void onResponse(Call<PageResponse<FbfOrderDto>> call, Response<PageResponse<FbfOrderDto>> res) {
+                        if (res.isSuccessful() && res.body() != null) {
+                            adapter.setOrders(res.body().getContent());
+                            Log.d("OrderHistoryFragment", "Order history fetched successfully");
+                        } else {
+                            Toast.makeText(requireContext(), "Lỗi: " + res.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<FbfOrderDto>> call, Throwable t) {
+                        Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
