@@ -3,6 +3,7 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,8 +14,10 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.demo_fbfmobile.MainActivity;
 import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.ApiResponse;
+import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
@@ -24,10 +27,12 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
-    private TextView tvOrderId;
+    private TextView tvOrderId, textAddress, texttotalPrice;
     private TextView textTimer;
     private Button btnPay;
     private Long orderId;
+    private Double totalPrice;
+    private String address;
     private CountDownTimer countDownTimer;
     private boolean isPaid = false;
 
@@ -45,8 +50,18 @@ public class PaymentActivity extends AppCompatActivity {
         tvOrderId = findViewById(R.id.tvOrderId);
         textTimer = findViewById(R.id.textTimer);
         btnPay = findViewById(R.id.btnPay);
+        texttotalPrice = findViewById(R.id.textTotalPrice);
+        textAddress = findViewById(R.id.textAddress);
         orderId = getIntent().getLongExtra("orderId", -1);
+        totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
+        address = getIntent().getStringExtra("address");
+        if (totalPrice == 0 || address == null){
+            getTotalPriceAndAddressByOrderId(orderId);
+        }
+        Log.d("Payment activity", "orderId: " + orderId + " totalPrice: " + totalPrice + " address: " + address);
         tvOrderId.setText("OrderID: " + orderId);
+        textAddress.setText(address);
+        texttotalPrice.setText(String.format("%.2f VND", totalPrice));
         if (orderId == -1) {
             Toast.makeText(this, "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
             finish();
@@ -60,7 +75,7 @@ public class PaymentActivity extends AppCompatActivity {
             isPaid = true;
             countDownTimer.cancel();
             btnPay.setEnabled(false);
-            confirmOrder(); // Chuyển sang HomeActivity sẽ được xử lý trong confirmOrder
+            confirmOrder();
         });
     }
 
@@ -83,7 +98,31 @@ public class PaymentActivity extends AppCompatActivity {
             }
         }.start();
     }
+    private void getTotalPriceAndAddressByOrderId(Long orderid){
+        String token = new TokenManager(this).getToken();
+        if (token == null || token.isEmpty()) {
+            Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        String authToken = "Bearer " + token;
+        ApiService apiService = ApiClient.getApiService();
+        apiService.getOrderByOrderId(authToken, orderid).enqueue(new Callback<ApiResponse<FbfOrderDto>>() {
+            @Override
+            public void onResponse(Call<ApiResponse<FbfOrderDto>> call, Response<ApiResponse<FbfOrderDto>> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.d("Payment activity", "Lấy Address, TotalPrice thành công" + response.body() + orderid);
+                    texttotalPrice.setText(String.format("%.2f VND", response.body().getData().getDiscountedTotalPrice()));
+                    textAddress.setText(response.body().getData().getAddress());
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ApiResponse<FbfOrderDto>> call, Throwable t) {
+                Log.d("Payment activity", "Loi Kết nối");
+            }
+        });
+    }
     private void confirmOrder() {
         String token = new TokenManager(this).getToken();
         if (token == null || token.isEmpty()) {
@@ -100,11 +139,11 @@ public class PaymentActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Toast.makeText(PaymentActivity.this, "Thanh toán thành công", Toast.LENGTH_LONG).show();
-                    // Chuyển sang HomeActivity và xóa stack
-                    Intent intent = new Intent(PaymentActivity.this, HomeActivity.class);
+                    // Chuyển sang MainActivity và xóa stack
+                    Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
-                    finish(); // Đóng PaymentActivity sau khi chuyển
+//                    finish(); // Đóng PaymentActivity sau khi chuyển
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(PaymentActivity.this, "Thanh toán thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();

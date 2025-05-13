@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/itemContainer"
+    android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    android:background="@drawable/linearlayoutbackgroud"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/imageProduct"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:src="@drawable/facebook" />
+
+    <LinearLayout
+        android:id="@+id/textContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingLeft="10dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/textProductName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kim Chi cải thảo"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textSizeCartItemHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kích thước: M"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/textQuantityCartItemHistory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Số lượng: 3"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/textUnitPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đơn Giá: 5.33 VNĐ"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/textTotalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Thành Tiền: 15.99 VNĐ"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
+
+</LinearLayout>

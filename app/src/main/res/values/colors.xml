@@ -63,5 +63,5 @@
     <color name="colorPrimaryDark">#762400</color> <!-- có thể lấy tông đậm hơn -->
     <color name="colorAccent">#E95322</color>
 
-
+    <color name="colorGray2">#F5F5F5</color>
 </resources>

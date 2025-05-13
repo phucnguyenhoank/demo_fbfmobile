@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorYellowBase"
-    tools:context=".ui.OrderHistoryActivity">
+    tools:context=".HistoryOrderPaidActivity">
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,41 +23,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Lịch Sử Đặt Hàng"
+        android:text="Chi Tiết Hóa Đơn"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp"
+
         />
     <LinearLayout
-        android:background="@drawable/loginlayout"
-        android:layout_marginTop="163dp"
         android:layout_width="match_parent"
-        android:orientation="vertical"
-        android:padding="20dp"
-        android:layout_height="match_parent">
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            app:tabBackground="@drawable/tab_background"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="fixed"
-            app:tabGravity="fill"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/colorOrangeBase" />
-
+        android:layout_height="match_parent"
+        android:padding="30dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:background="@drawable/relative_bottom_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="163dp">
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvOrders"
+            android:id="@+id/rvHistoryOrderCartItem"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_margin="8dp"
             android:padding="8dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            android:clipToPadding="false"
+            android:scrollbars="vertical"/>
+        </LinearLayout>
 
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
