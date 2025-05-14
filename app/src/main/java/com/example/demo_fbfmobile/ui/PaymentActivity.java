@@ -22,6 +22,7 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -69,7 +70,7 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        tvOrderId.setText("OrderID: " + orderId);
+        tvOrderId.setText("Mã số: " + orderId);
 
         fetchOrderDetailsAndStartTimer();
 
@@ -103,8 +104,8 @@ public class PaymentActivity extends AppCompatActivity {
                     if (address == null) {
                         address = order.getAddress();
                     }
-
-                    textTotalPrice.setText(String.format("%.2f VND", totalPrice));
+                    NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+                    textTotalPrice.setText("Tổng: " + nf.format(totalPrice) + " VND");
                     textAddress.setText(address);
 
 

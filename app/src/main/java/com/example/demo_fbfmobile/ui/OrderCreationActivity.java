@@ -3,8 +3,10 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,8 +29,10 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -92,6 +96,14 @@ public class OrderCreationActivity extends AppCompatActivity {
             }
             createUndoOrder(phone, address, selectedCartItemIds, discountCode);
         });
+
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void updateTotalPrice() {
@@ -100,7 +112,8 @@ public class OrderCreationActivity extends AppCompatActivity {
             double discountedPrice = item.getPrice() * (1 - item.getDiscountPercentage() / 100);
             totalPrice += discountedPrice * item.getQuantity();
         }
-        textTotalPrice.setText(String.format("Tổng giá: %.2f VND", totalPrice));
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        textTotalPrice.setText("Tổng giá: " + nf.format(totalPrice)  + " VND");
     }
 
     private void loadUserInfo() {
@@ -155,7 +168,6 @@ public class OrderCreationActivity extends AppCompatActivity {
                     intent.putExtra("address", orderDto.getAddress());
                     intent.putExtra("orderId", orderDto.getId());
                     startActivity(intent);
-//                    finish();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(OrderCreationActivity.this, "Tạo đơn hàng thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.demo_fbfmobile.ui.CartFragment;
+import com.example.demo_fbfmobile.ui.HelpFragment;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.HomeFragment;
 import com.example.demo_fbfmobile.ui.LoginActivity;
@@ -50,6 +51,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
+            else if (id == R.id.menu_help) {
+                selectedFragment = new HelpFragment();
+            }
 
             if (selectedFragment != null) {
                 getSupportFragmentManager()
@@ -64,6 +68,12 @@ public class MainActivity extends AppCompatActivity {
         // Load default fragment
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.menu_home);
+        }
+
+        // Check if coming from another activity with a request to open a fragment
+        String openFragment = getIntent().getStringExtra("openFragment");
+        if (openFragment != null && openFragment.equals("cart")) {
+            bottomNavigationView.setSelectedItemId(R.id.menu_cart);
         }
 
     }

@@ -1,5 +1,4 @@
 package com.example.demo_fbfmobile.ui;
-
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -120,8 +119,17 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         Button btnGoToCart = findViewById(R.id.btnGoToCart);
         btnGoToCart.setOnClickListener(v -> {
-            Intent intent = new Intent(FoodDetailActivity.this, CartActivity.class);
+            Intent intent = new Intent(FoodDetailActivity.this, MainActivity.class);
+            intent.putExtra("openFragment", "cart");
             startActivity(intent);
+        });
+
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
 
         likefood.setOnClickListener(v -> {
@@ -226,8 +234,7 @@ public class FoodDetailActivity extends AppCompatActivity {
         double discountedPrice = originalPrice * (1 - size.getDiscountPercentage() / 100.0);
         double discountAmount = originalPrice - discountedPrice;
 
-        // Nếu giảm ít nhất 1000 VND thì hiển thị cả giá gốc và giá giảm
-        if (discountAmount >= 1000) {
+        if (size.getDiscountPercentage() > 0) {
             tvOriginalPrice.setVisibility(View.VISIBLE);
             tvDiscountedPrice.setVisibility(View.VISIBLE);
 

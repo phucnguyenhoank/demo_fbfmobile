@@ -17,7 +17,9 @@ import com.example.demo_fbfmobile.model.CartItemDto;
 import com.example.demo_fbfmobile.model.OrderItemDetailDto;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -48,11 +50,19 @@ public class CartItemOrderHistoryAdapter extends RecyclerView.Adapter<CartItemOr
         Glide.with(holder.imageFood.getContext())
                 .load(item.getImageUrl())
                 .into(holder.imageFood);
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+
+        double discountPercentage = item.getDiscountPercentage();
+        if (discountPercentage > 0){
+            holder.textPrice.setText("Đơn giá: " + nf.format(item.getDiscountedPrice()) + " VND (-" + discountPercentage + "%)");
+        }
+        else {
+            holder.textPrice.setText("Đơn giá: " + nf.format(item.getDiscountedPrice()) + " VND");
+        }
         holder.textFoodName.setText(item.getFoodName());
-        holder.textPrice.setText("Đơn giá: " + item.getDiscountedPrice() + " VND");
         holder.textQuantity.setText("Số lượng: " + item.getQuantity());
         holder.textSize.setText("Kích thước: " + item.getSize());
-        holder.totalPrice.setText("Thành tiền: " + (item.getDiscountedPrice() * item.getQuantity()) + " VND");
+//        holder.totalPrice.setText("Thành tiền: " + (item.getDiscountedPrice() * item.getQuantity()) + " VND");
     }
 
     @Override

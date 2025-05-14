@@ -8,14 +8,6 @@
     android:orientation="vertical"
     android:background="@color/colorYellowBase"
     tools:context=".ui.PaymentActivity">
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="44dp"
-        android:src="@drawable/backiconarrow"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -38,14 +30,14 @@
         android:paddingTop="30dp"
         android:padding="20dp"
         android:background="@drawable/linearlayoutbackgroud"
-        android:layout_marginTop="163dp">
+        android:layout_marginTop="100dp">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/black"
             android:text="Địa chỉ"
             android:textStyle="bold"
-            android:textSize="25sp"/>
+            android:textSize="20sp"/>
         <TextView
             android:id="@+id/textAddress"
             android:layout_marginTop="10dp"
@@ -56,8 +48,8 @@
             android:paddingStart="10dp"
             android:textColor="@color/black"
             android:text="484A Lê Văn Việt"
-            android:background="@drawable/layout_edittext"
-            android:textSize="20sp"/>
+            android:textSize="16sp"/>
+
        <LinearLayout
            android:layout_marginTop="10dp"
            android:layout_width="match_parent"
@@ -73,40 +65,41 @@
                    android:layout_height="wrap_content"
                    android:text="Hóa Đơn"
                    android:textColor="@color/black"
-                   android:textSize="25sp"
+                   android:textSize="20sp"
                    android:textStyle="bold"/>
                <TextView
                    android:layout_marginTop="5dp"
                    android:id="@+id/tvOrderId"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
-                   android:textSize="20sp"
+                   android:textSize="16sp"
                    android:textColor="@color/black"
-                   android:text="TextView" />
+                   android:text="Mã hóa đơn" />
 
                <TextView
                    android:id="@+id/textTimer"
                    android:layout_width="wrap_content"
                    android:layout_height="wrap_content"
                    android:text="Thời gian còn lại: 3:00"
-                   android:textSize="20sp"
+                   android:textSize="16sp"
                    android:textColor="@color/black"
                    android:layout_marginTop="5dp"
-                   android:textStyle="bold"
                    android:layout_marginBottom="16dp" />
+
+               <TextView
+                   android:id="@+id/textTotalPrice"
+                   app:layout_constraintEnd_toEndOf="parent"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:gravity="center"
+                   android:text="40000 VNĐ"
+                   android:textSize="20sp"
+                   android:textColor="@color/black"
+                   android:textStyle="bold" />
            </LinearLayout>
-           <TextView
-               android:id="@+id/textTotalPrice"
-               app:layout_constraintEnd_toEndOf="parent"
-               android:layout_width="wrap_content"
-               android:layout_height="match_parent"
-               android:gravity="center"
-               android:text="40000 VNĐ"
-               android:textSize="20sp"
-               android:textColor="@color/black"
-               android:textStyle="bold"
-               />
+
        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -120,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Phương Thức Thanh Toán"
-                    android:textSize="25sp"
+                    android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"/>
                 <LinearLayout
@@ -141,14 +134,14 @@
                         android:layout_height="wrap_content"
                         android:text="Thẻ Ngân Hàng:"
                         android:layout_weight="1"
-                        android:textSize="20sp"
+                        android:textSize="16sp"
                         android:textColor="@color/black"
                         android:layout_marginStart="8dp"/>
                     <TextView
                         android:layout_marginStart="5dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="***43/00/000"
+                        android:text="****96102"
                         android:gravity="center"
                         android:padding="5dp"
                         android:textSize="20sp"
@@ -166,7 +159,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Giao Hàng"
-                android:textSize="25sp"
+                android:textSize="20sp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 />
@@ -178,10 +171,10 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
+                    android:textSize="16sp"
                     android:layout_weight="1"
                     android:textColor="@color/black"
-                    android:text="Thời gian Giao Hàng Dự kiến: "/>
+                    android:text="Thời gian giao Hàng dự kiến: "/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:gravity="right"
