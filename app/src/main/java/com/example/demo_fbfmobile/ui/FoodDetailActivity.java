@@ -1,6 +1,9 @@
 package com.example.demo_fbfmobile.ui;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +22,7 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.demo_fbfmobile.MainActivity;
 import com.example.demo_fbfmobile.R;
+import com.example.demo_fbfmobile.database.DatabaseHelper;
 import com.example.demo_fbfmobile.model.ApiResponse;
 import com.example.demo_fbfmobile.model.CartItemRequest;
 import com.example.demo_fbfmobile.model.CartItemDto;
@@ -42,13 +46,15 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_FOOD_ID = "extra_food_id";
 
-    private ImageView ivFoodImage;
+    private ImageView ivFoodImage, likefood;
+
+    private Long userId;
     private TextView tvFoodName, tvDescription, tvOriginalPrice, tvDiscountedPrice, tvStock, tvQuantity;
     private RadioGroup rgSizes;
     private Button  btnAddToCart;
     private ImageView btnDecrease, btnIncrease;
     private int selectedQuantity = 1;
-
+    private boolean isLiked;
     private FoodDto currentFood;
     private FoodSizeDto currentSize;
 
@@ -57,17 +63,18 @@ public class FoodDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_food_detail);
 
-        ivFoodImage       = findViewById(R.id.ivFoodImage);
-        tvFoodName        = findViewById(R.id.tvFoodName);
-        tvDescription     = findViewById(R.id.tvDescription);
-        tvOriginalPrice   = findViewById(R.id.tvOriginalPrice);
+        ivFoodImage = findViewById(R.id.ivFoodImage);
+        tvFoodName = findViewById(R.id.tvFoodName);
+        tvDescription = findViewById(R.id.tvDescription);
+        tvOriginalPrice = findViewById(R.id.tvOriginalPrice);
         tvDiscountedPrice = findViewById(R.id.tvDiscountedPrice);
-        tvStock           = findViewById(R.id.tvStock);
-        rgSizes           = findViewById(R.id.rgSizes);
-        tvQuantity        = findViewById(R.id.tvQuantity);
-        btnDecrease       = findViewById(R.id.btnDecrease);
-        btnIncrease       = findViewById(R.id.btnIncrease);
-        btnAddToCart      = findViewById(R.id.btnAddToCart);
+        tvStock = findViewById(R.id.tvStock);
+        rgSizes = findViewById(R.id.rgSizes);
+        tvQuantity = findViewById(R.id.tvQuantity);
+        btnDecrease = findViewById(R.id.btnDecrease);
+        btnIncrease = findViewById(R.id.btnIncrease);
+        btnAddToCart = findViewById(R.id.btnAddToCart);
+        likefood = findViewById(R.id.likefood);
 
         // setup quantity buttons
         btnDecrease.setOnClickListener(v -> updateQuantity(-1));
@@ -75,6 +82,23 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         long foodId = getIntent().getLongExtra(EXTRA_FOOD_ID, -1);
         if (foodId < 0) { finish(); return; }
+
+        // Lấy userId từ TokenManager
+        TokenManager token = new TokenManager(this);
+        String userIdString = token.getCartId();
+
+        // Kiểm tra trạng thái like ban đầu
+        if (userIdString != null && !userIdString.isEmpty()) {
+            userId = Long.parseLong(userIdString);
+            String foodIdSelect = String.valueOf(foodId);
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            boolean isLiked = dbHelper.getLikeStatus(foodIdSelect, userId.toString());
+            likefood.setImageResource(isLiked ? R.drawable.like : R.drawable.nolike);
+            Log.d("LIKE_STATUS", "Initial like status for foodId: " + foodIdSelect + ", userId: " + userIdString + " is " + isLiked);
+        } else {
+            Log.d("LIKE_STATUS", "User not logged in, default to nolike");
+            likefood.setImageResource(R.drawable.nolike);
+        }
 
         fetchFoodDetail(foodId);
 
@@ -99,6 +123,56 @@ public class FoodDetailActivity extends AppCompatActivity {
             Intent intent = new Intent(FoodDetailActivity.this, CartActivity.class);
             startActivity(intent);
         });
+
+        likefood.setOnClickListener(v -> {
+            // Kiểm tra nếu userId là null hoặc không hợp lệ
+            if (userIdString == null || userIdString.isEmpty()) {
+                Toast.makeText(FoodDetailActivity.this, "Vui lòng đăng nhập", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Chuyển đổi userId từ String sang Long
+            userId = Long.parseLong(userIdString);
+
+            // Lấy foodId (giả sử bạn đã có foodId)
+            String foodIdSelect = String.valueOf(foodId);
+
+            // Tạo đối tượng DatabaseHelper để truy cập cơ sở dữ liệu
+            DatabaseHelper dbHelper = new DatabaseHelper(FoodDetailActivity.this);
+
+            // Lấy trạng thái like hiện tại từ cơ sở dữ liệu
+            boolean isLiked = dbHelper.getLikeStatus(foodIdSelect, userId.toString());
+
+            // Đảo ngược trạng thái like
+            isLiked = !isLiked;
+
+            // Cập nhật lại trạng thái like vào cơ sở dữ liệu
+            updateLikeStatus(foodIdSelect, userId.toString(), isLiked);
+
+            // Cập nhật giao diện người dùng (icon like)
+            likefood.setImageResource(isLiked ? R.drawable.like : R.drawable.nolike);
+        });
+
+    }
+    public void updateLikeStatus(String foodId, String userId, boolean isLiked) {
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(DatabaseHelper.COLUMN_IS_LIKED, isLiked ? 1 : 0);
+
+        int rowsAffected = db.update(DatabaseHelper.TABLE_LIKES, values,
+                DatabaseHelper.COLUMN_FOOD_ID + " = ? AND " + DatabaseHelper.COLUMN_USER_ID + " = ?",
+                new String[]{foodId, userId});
+        Log.d("DB_UPDATE", "Rows affected: " + rowsAffected + ", foodId: " + foodId + ", userId: " + userId);
+
+        if (rowsAffected == 0) {
+            values.put(DatabaseHelper.COLUMN_FOOD_ID, foodId);
+            values.put(DatabaseHelper.COLUMN_USER_ID, userId);
+            long insertId = db.insert(DatabaseHelper.TABLE_LIKES, null, values);
+            Log.d("DB_INSERT", "Inserted row ID: " + insertId);
+        }
+
+        db.close();
     }
 
     private void updateQuantity(int delta) {
