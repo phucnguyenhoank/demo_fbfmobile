@@ -54,7 +54,8 @@ public class CartActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.recyclerViewCart);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new CartItemAdapter(cartItems, this);
+        adapter = new CartItemAdapter(cartItems, this, () ->
+                fetchCartItems());
         recyclerView.setAdapter(adapter);
         btnCreateOrder = findViewById(R.id.btnCreateOrder);
 
