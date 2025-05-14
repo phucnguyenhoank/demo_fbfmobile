@@ -45,7 +45,8 @@ public class FoodDetailActivity extends AppCompatActivity {
     private ImageView ivFoodImage;
     private TextView tvFoodName, tvDescription, tvOriginalPrice, tvDiscountedPrice, tvStock, tvQuantity;
     private RadioGroup rgSizes;
-    private Button btnDecrease, btnIncrease, btnAddToCart;
+    private Button  btnAddToCart;
+    private ImageView btnDecrease, btnIncrease;
     private int selectedQuantity = 1;
 
     private FoodDto currentFood;

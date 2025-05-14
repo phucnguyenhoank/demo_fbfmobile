@@ -1,7 +1,9 @@
 package com.example.demo_fbfmobile.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,7 +57,7 @@ public class OrderHistoryFragment extends Fragment {
         rvOrders = view.findViewById(R.id.rvOrders);
 
         // Thiết lập TabLayout
-        String[] tabTitles = {"PAID", "PENDING"};
+        String[] tabTitles = {"PAID", "PENDING", "CANCELED"};
         for (String title : tabTitles) {
             TabLayout.Tab tab = tabLayout.newTab();
 
@@ -66,12 +68,20 @@ public class OrderHistoryFragment extends Fragment {
             tab.setCustomView(customTabView);
             tabLayout.addTab(tab);
         }
-
         // Thiết lập RecyclerView
         adapter = new OrderAdapter();
         rvOrders.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvOrders.setAdapter(adapter);
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            View tab = ((ViewGroup) tabLayout.getChildAt(0)).getChildAt(i);
+            TextView tabTextView = tab.findViewById(com.google.android.material.R.id.text);
+            if (tabTextView != null) {
+                tabTextView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12); // 12sp
+                tabTextView.setSingleLine(true);
+                tabTextView.setEllipsize(TextUtils.TruncateAt.END);
 
+            }
+        }
         // Lấy token
         TokenManager tokenManager = new TokenManager(requireContext());
         token = tokenManager.getToken();
@@ -89,6 +99,9 @@ public class OrderHistoryFragment extends Fragment {
                     fetchOrderHistoryPaid(0, 20, "createdAt,desc");
                 } else if (position == 1) {
                     fetchOrderHistoryPending(0, 20, "createdAt,desc");
+                }
+                else if(position == 2){
+                    fetchOrderHistoryCancelled(0, 20, "createdAt,desc");
                 }
             }
 
@@ -155,6 +168,35 @@ public class OrderHistoryFragment extends Fragment {
                             }
                             adapter.setOrders(dataPaid);
                             Log.d("OrderHistoryFragment", "Paid Order history fetched successfully");
+                        } else {
+                            Toast.makeText(requireContext(), "Lỗi: " + res.code(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<FbfOrderDto>> call, Throwable t) {
+                        Toast.makeText(requireContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void fetchOrderHistoryCancelled(int page, int size, String sort) {
+        ApiService api = ApiClient.getApiService();
+        api.getOrderHistory("Bearer " + token, page, size, sort)
+                .enqueue(new Callback<PageResponse<FbfOrderDto>>() {
+                    @Override
+                    public void onResponse(Call<PageResponse<FbfOrderDto>> call, Response<PageResponse<FbfOrderDto>> res) {
+                        Log.d("Pending Oder History",res.body().toString());
+                        if (res.isSuccessful() && res.body() != null) {
+                            List<FbfOrderDto> data = res.body().getContent();
+                            List<FbfOrderDto> dataPending = new ArrayList<>();
+                            for (int i = 0; i < data.size(); i++) {
+                                if (data.get(i).getStatus().equalsIgnoreCase("CANCELED"))
+                                {
+                                    dataPending.add(data.get(i));
+                                }
+                            }
+                            adapter.setOrders(dataPending);
+                            Log.d("OrderHistoryFragment", "CANCELED Order history fetched successfully");
                         } else {
                             Toast.makeText(requireContext(), "Lỗi: " + res.code(), Toast.LENGTH_SHORT).show();
                         }
