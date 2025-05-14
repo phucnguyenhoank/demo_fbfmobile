@@ -39,7 +39,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     private List<CartItemDisplay> cartItems;
     private String authToken;
     private Context context;
-
     private OnItemClickListener listener;
 
     public CartItemAdapter(List<CartItemDisplay> cartItems, Context context, OnItemClickListener listener) {
@@ -92,7 +91,16 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         CartItemDisplay item = cartItems.get(position);
         holder.textFoodName.setText(item.getFoodName());
         NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
-        holder.textPrice.setText("Đơn giá: " + nf.format(item.getPrice()) + " VND");
+
+        double discountPercentage = item.getDiscountPercentage();
+        if (discountPercentage > 0){
+            double discountedPrice = item.getPrice() * (1 - discountPercentage / 100);
+            holder.textPrice.setText("Đơn giá: " + nf.format(discountedPrice) + " VND (-" + discountPercentage + "%)");
+        }
+        else {
+            holder.textPrice.setText("Đơn giá: " + nf.format(item.getPrice()) + " VND");
+        }
+
         holder.textQuantity.setText(item.getQuantity().toString());
         holder.checkboxSelect.setChecked(item.isSelected());
         holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -132,7 +140,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
             ApiService apiService = ApiClient.getApiService();
             Call<ApiResponse<String>> call = apiService.deleteCartItem(authToken, cartItemId);
-            call.enqueue(new Callback<ApiResponse<String>>() {
+            call.enqueue(new Callback<>() {
                 @Override
                 public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
                     int currentPosition = holder.getBindingAdapterPosition();
@@ -275,10 +283,23 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                                 Toast.makeText(context, "Cập nhật kích thước thất bại", Toast.LENGTH_SHORT).show();
                             }
                             else {
-                                Double newPrice = response.body().getData().getPrice();
+                                CartItemDto newCartItemDto = response.body().getData();
+                                Double newPrice = newCartItemDto.getPrice();
+                                Double newDiscountPercentage = newCartItemDto.getDiscountPercentage(); // Lấy discount mới
+
+                                // Cập nhật price và discountPercentage cho item
                                 item.setPrice(newPrice);
+                                item.setDiscountPercentage(newDiscountPercentage);
+                                item.setQuantity(newCartItemDto.getQuantity());
+
                                 NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
-                                holder.textPrice.setText("Đơn giá: " + nf.format(response.body().getData().getPrice()) + " VND");
+                                if (newDiscountPercentage > 0) {
+                                    double discountedPrice = newPrice * (1 - newDiscountPercentage / 100);
+                                    holder.textPrice.setText("Đơn giá: " + nf.format(discountedPrice) + " VND (-" + newDiscountPercentage + "%)");
+                                } else {
+                                    holder.textPrice.setText("Đơn giá: " + nf.format(newPrice) + " VND");
+                                }
+
                                 if (listener != null) {
                                     listener.onItemClick();
                                 }

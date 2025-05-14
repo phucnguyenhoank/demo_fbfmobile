@@ -8,6 +8,7 @@
     android:background="@color/colorYellowBase"
     android:orientation="vertical"
     tools:context=".ui.OrderCreationActivity">
+
     <ImageView
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
@@ -29,9 +30,8 @@
         android:text="Xác Nhận Đơn Hàng"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="26sp"
-        />
-
+        android:textSize="26sp" />
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -41,6 +41,7 @@
         android:paddingBottom="20dp"
         android:background="@drawable/linearlayoutbackgroud"
         android:layout_marginTop="100dp">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -76,6 +77,7 @@
                     android:layout_marginTop="8dp"
                     android:text="Tổng giá: 0 VND"
                     android:textSize="20sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <View
@@ -104,7 +106,7 @@
                     android:id="@+id/editAddress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:paddingTop = "5dp"
                     android:paddingBottom="5dp"
                     android:paddingStart="10dp"
@@ -123,7 +125,7 @@
                     android:id="@+id/editPhone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:paddingTop = "5dp"
                     android:paddingBottom="5dp"
                     android:paddingStart="10dp"
@@ -142,7 +144,7 @@
                     android:id="@+id/editDiscountCode"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
                     android:paddingTop = "5dp"
                     android:paddingBottom="5dp"
                     android:paddingStart="10dp"

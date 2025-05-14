@@ -2,6 +2,8 @@ package com.example.demo_fbfmobile;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -52,6 +54,13 @@ public class HistoryOrderPaidActivity extends AppCompatActivity {
         adapter = new CartItemOrderHistoryAdapter(cartItems, this);
         recyclerView.setAdapter(adapter);
         fetchCartItemOrderHistory();
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
     private void fetchCartItemOrderHistory(){
         TokenManager tokenManager = new TokenManager(this);

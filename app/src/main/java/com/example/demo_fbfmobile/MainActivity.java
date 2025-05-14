@@ -66,6 +66,12 @@ public class MainActivity extends AppCompatActivity {
             bottomNavigationView.setSelectedItemId(R.id.menu_home);
         }
 
+        // Check if coming from another activity with a request to open a fragment
+        String openFragment = getIntent().getStringExtra("openFragment");
+        if (openFragment != null && openFragment.equals("cart")) {
+            bottomNavigationView.setSelectedItemId(R.id.menu_cart);
+        }
+
     }
 
 }

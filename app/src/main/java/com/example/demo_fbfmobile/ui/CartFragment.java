@@ -1,6 +1,7 @@
 package com.example.demo_fbfmobile.ui;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +25,10 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,7 +41,7 @@ public class CartFragment extends Fragment {
     private ApiService apiService;
     private RecyclerView recyclerView;
     private CartItemAdapter adapter;
-    private TextView textTotalPriceCart;
+    private TextView textTotalOriginalPriceCart, textTotalDiscountedPriceCart;
     private List<CartItemDisplay> cartItems = new ArrayList<>();
     private Button btnCreateOrder;
 
@@ -57,7 +61,8 @@ public class CartFragment extends Fragment {
         // Khởi tạo views
         recyclerView = view.findViewById(R.id.recyclerViewCart);
         btnCreateOrder = view.findViewById(R.id.btnCreateOrder);
-        textTotalPriceCart = view.findViewById(R.id.textTotalPriceCart);
+        textTotalOriginalPriceCart = view.findViewById(R.id.textTotalOriginalPriceCart);
+        textTotalDiscountedPriceCart = view.findViewById(R.id.textTotalDiscountedPriceCart);
 
         // Thiết lập RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -99,18 +104,41 @@ public class CartFragment extends Fragment {
             }
         }
         if (selectedItems.isEmpty()) {
-            textTotalPriceCart.setText("Tổng Giá: 0 VNĐ");
-            return;
+            textTotalOriginalPriceCart.setVisibility(View.VISIBLE);
+            textTotalDiscountedPriceCart.setVisibility(View.GONE);
+            textTotalOriginalPriceCart.setText("Tổng giá gốc: 0 VND");
         }
         else {
-            Double totalPriceCartItem = 0.0;
+            Double totalOriginalPriceCartItem = 0.0;
+            Double totalDiscountedPriceCartItem = 0.0;
             for (CartItemDisplay item : selectedItems){
                 int quantity = item.getQuantity();
                 Double price = item.getPrice();
-                totalPriceCartItem += quantity * price;
-                Log.d("Information CartFragment", "totalPriceCartItem: " + totalPriceCartItem + "price: " + price);
+                Double discountedPrice = price * (1 - item.getDiscountPercentage() / 100);
+                totalOriginalPriceCartItem += quantity * price;
+                totalDiscountedPriceCartItem += quantity * discountedPrice;
+                Log.d("CartFragment", "item.getDiscountPercentage(): " + item.getDiscountPercentage() + ";price: " + price);
             }
-            textTotalPriceCart.setText("Tổng tiền: " + totalPriceCartItem + " VND");
+            Log.d("CartFragment", "totalOriginalPriceCartItem: " + totalOriginalPriceCartItem + ";totalDiscountedPriceCartItem:" + totalDiscountedPriceCartItem);
+            NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+            if (totalOriginalPriceCartItem - totalDiscountedPriceCartItem > 0.0001) {
+                textTotalOriginalPriceCart.setVisibility(View.VISIBLE);
+                textTotalDiscountedPriceCart.setVisibility(View.VISIBLE);
+
+                textTotalOriginalPriceCart.setText("Giá gốc: " + nf.format(totalOriginalPriceCartItem) + " VND");
+                textTotalOriginalPriceCart.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow_primary));
+                textTotalOriginalPriceCart.setPaintFlags(textTotalOriginalPriceCart.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+
+                textTotalDiscountedPriceCart.setText("Ưu đãi: " + nf.format(totalDiscountedPriceCartItem) + " VND");
+                textTotalDiscountedPriceCart.setTextColor(ContextCompat.getColor(requireContext(), R.color.orange_primary));
+            }
+            else {
+                textTotalOriginalPriceCart.setVisibility(View.GONE);
+                textTotalDiscountedPriceCart.setVisibility(View.VISIBLE);
+                textTotalDiscountedPriceCart.setText("Tổng giá gốc: " + nf.format(totalOriginalPriceCartItem) + " VND");
+                textTotalDiscountedPriceCart.setTextColor(ContextCompat.getColor(requireContext(), R.color.yellow_primary));
+            }
+
         }
     }
 

@@ -29,8 +29,10 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -110,7 +112,8 @@ public class OrderCreationActivity extends AppCompatActivity {
             double discountedPrice = item.getPrice() * (1 - item.getDiscountPercentage() / 100);
             totalPrice += discountedPrice * item.getQuantity();
         }
-        textTotalPrice.setText(String.format("Tổng giá: %.2f VND", totalPrice));
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        textTotalPrice.setText("Tổng giá: " + nf.format(totalPrice)  + " VND");
     }
 
     private void loadUserInfo() {

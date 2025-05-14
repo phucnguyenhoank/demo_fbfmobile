@@ -38,8 +38,7 @@
             android:layout_width="match_parent"
             android:scrollbars="none"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1" />
         <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -48,12 +47,23 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tổng Giá: 0 VNĐ"
+            android:text="Tổng giá gốc: 0 VND"
             android:layout_gravity="center_vertical"
             android:textColor="@color/black"
             android:textSize="20dp"
             android:textStyle="bold"
-            android:id="@+id/textTotalPriceCart"/>
+            android:id="@+id/textTotalOriginalPriceCart"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tổng giá giảm: 0 VND"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            android:id="@+id/textTotalDiscountedPriceCart"/>
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/btnCreateOrder"

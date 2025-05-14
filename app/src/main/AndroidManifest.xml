@@ -29,10 +29,12 @@
             android:exported="false" />
         <activity
             android:name=".ui.PaymentActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.OrderCreationActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".ui.CartActivity"
             android:exported="false" />
@@ -46,7 +48,8 @@
         </activity>
         <activity
             android:name=".ui.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize">
 
         </activity>
         <activity

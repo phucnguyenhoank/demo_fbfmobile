@@ -55,7 +55,10 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         holder.tvOrderId.setText("Mã hóa đơn #" + o.getId());
         holder.tvOrderDate.setText("Ngày tạo: " + o.getCreatedAt().replace("T", " ").substring(0, 16));
         NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
-        double discountPercentage = o.getDiscountCode().getDiscountPercentage();
+        double discountPercentage = 0;
+        if (o.getDiscountCode() != null) {
+            discountPercentage = o.getDiscountCode().getDiscountPercentage();
+        }
         if (discountPercentage > 0) {
             holder.tvTotalPrice.setText("Tổng: " + nf.format(o.getDiscountedTotalPrice()) + " VND (-" + discountPercentage + "%)");
         }
@@ -74,11 +77,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 intent.putExtra("orderId", o.getId());
                 v.getContext().startActivity(intent);
             }
-            else{
+            else if("PENDING".equalsIgnoreCase(o.getStatus())){
                 Intent intent = new Intent(v.getContext(), PaymentActivity.class);
                 intent.putExtra("orderId", o.getId());
                 v.getContext().startActivity(intent);
             }
+
+
         });
     }
 

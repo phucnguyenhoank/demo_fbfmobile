@@ -7,7 +7,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    private static final String BASE_URL = "http://192.168.53.230:8080"; // Dùng 10.0.2.2 nếu chạy trên emulator
+    private static final String BASE_URL = "http://192.168.1.4:8080"; // Dùng 10.0.2.2 nếu chạy trên emulator
     private static Retrofit retrofit = null;
     OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .connectTimeout(10, TimeUnit.SECONDS)
