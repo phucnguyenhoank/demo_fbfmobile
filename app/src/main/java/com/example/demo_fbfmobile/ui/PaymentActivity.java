@@ -69,7 +69,7 @@ public class PaymentActivity extends AppCompatActivity {
             return;
         }
 
-        tvOrderId.setText("OrderID: " + orderId);
+        tvOrderId.setText("#: " + orderId);
 
         fetchOrderDetailsAndStartTimer();
 

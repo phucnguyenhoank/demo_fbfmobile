@@ -3,8 +3,10 @@ package com.example.demo_fbfmobile.ui;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,6 +93,14 @@ public class OrderCreationActivity extends AppCompatActivity {
                 selectedCartItemIds.add(item.getId());
             }
             createUndoOrder(phone, address, selectedCartItemIds, discountCode);
+        });
+
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
         });
     }
 
