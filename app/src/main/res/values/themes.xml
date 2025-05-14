@@ -23,4 +23,9 @@
     </style>
 
     <style name="Theme.Demo_fbfmobile" parent="Base.Theme.Demo_fbfmobile" />
+
+    <style name="ThemeOverlay.Demo_fbfmobile.FullscreenContainer" parent="">
+        <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
+        <item name="fullscreenTextColor">@color/light_blue_A200</item>
+    </style>
 </resources>

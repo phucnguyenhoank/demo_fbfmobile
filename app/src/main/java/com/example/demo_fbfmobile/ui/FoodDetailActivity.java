@@ -163,24 +163,31 @@ public class FoodDetailActivity extends AppCompatActivity {
 
     }
     public void updateLikeStatus(String foodId, String userId, boolean isLiked) {
-        DatabaseHelper dbHelper = new DatabaseHelper(this);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.COLUMN_IS_LIKED, isLiked ? 1 : 0);
+        SQLiteDatabase db = null;
+        try {
+            DatabaseHelper dbHelper = new DatabaseHelper(this);
+            db = dbHelper.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(DatabaseHelper.COLUMN_IS_LIKED, isLiked ? 1 : 0);
 
-        int rowsAffected = db.update(DatabaseHelper.TABLE_LIKES, values,
-                DatabaseHelper.COLUMN_FOOD_ID + " = ? AND " + DatabaseHelper.COLUMN_USER_ID + " = ?",
-                new String[]{foodId, userId});
-        Log.d("DB_UPDATE", "Rows affected: " + rowsAffected + ", foodId: " + foodId + ", userId: " + userId);
+            int rowsAffected = db.update(DatabaseHelper.TABLE_LIKES, values,
+                    DatabaseHelper.COLUMN_FOOD_ID + " = ? AND " + DatabaseHelper.COLUMN_USER_ID + " = ?",
+                    new String[]{foodId, userId});
+            Log.d("DB_UPDATE", "Rows affected: " + rowsAffected + ", foodId: " + foodId + ", userId: " + userId);
 
-        if (rowsAffected == 0) {
-            values.put(DatabaseHelper.COLUMN_FOOD_ID, foodId);
-            values.put(DatabaseHelper.COLUMN_USER_ID, userId);
-            long insertId = db.insert(DatabaseHelper.TABLE_LIKES, null, values);
-            Log.d("DB_INSERT", "Inserted row ID: " + insertId);
+            if (rowsAffected == 0) {
+                values.put(DatabaseHelper.COLUMN_FOOD_ID, foodId);
+                values.put(DatabaseHelper.COLUMN_USER_ID, userId);
+                long insertId = db.insert(DatabaseHelper.TABLE_LIKES, null, values);
+                Log.d("DB_INSERT", "Inserted row ID: " + insertId);
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Lỗi khi cập nhật trạng thái like: " + e.getMessage());
+        } finally {
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
         }
-
-        db.close();
     }
 
     private void updateQuantity(int delta) {

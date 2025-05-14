@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.demo_fbfmobile.ui.CartFragment;
+import com.example.demo_fbfmobile.ui.FavoriteFragment;
 import com.example.demo_fbfmobile.ui.HelpFragment;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.HomeFragment;
@@ -53,6 +54,16 @@ public class MainActivity extends AppCompatActivity {
             }
             else if (id == R.id.menu_help) {
                 selectedFragment = new HelpFragment();
+            }
+            else if (id == R.id.menu_favorite)
+            {
+                TokenManager tokenManager = new TokenManager(MainActivity.this);
+                if (tokenManager.getToken() != null && !tokenManager.isTokenExpired()) {
+                    selectedFragment = new FavoriteFragment();
+                } else {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
             }
 
             if (selectedFragment != null) {

@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "food_db";
     private static final int DATABASE_VERSION = 1;
@@ -54,31 +57,69 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     // Lấy trạng thái like của món ăn đối với một user cụ thể
     public boolean getLikeStatus(String foodId, String userId) {
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = null;
+        Cursor cursor = null;
+        try {
+            db = this.getWritableDatabase();
+            if (!db.isOpen()) {
+                Log.e("DatabaseHelper", "Cơ sở dữ liệu không thể mở");
+                return false;
+            }
 
-        Cursor cursor = db.query(TABLE_LIKES, new String[]{COLUMN_IS_LIKED},
-                COLUMN_FOOD_ID + " = ? AND " + COLUMN_USER_ID + " = ?", new String[]{foodId, userId},
-                null, null, null);
+            cursor = db.query(TABLE_LIKES, new String[]{COLUMN_IS_LIKED},
+                    COLUMN_FOOD_ID + " = ? AND " + COLUMN_USER_ID + " = ?",
+                    new String[]{foodId, userId}, null, null, null);
 
-        if (cursor != null) {
-            try {
-                if (cursor.moveToFirst()) {
-                    int index = cursor.getColumnIndex(COLUMN_IS_LIKED);
-                    return index != -1 && cursor.getInt(index) == 1;
-                } else {
-                    ContentValues values = new ContentValues();
-                    values.put(COLUMN_USER_ID, userId);
-                    values.put(COLUMN_FOOD_ID, foodId);
-                    values.put(COLUMN_IS_LIKED, 0);
-                    db.insert(TABLE_LIKES, null, values);
-                    return false;
-                }
-            } finally {
+            if (cursor != null && cursor.moveToFirst()) {
+                int index = cursor.getColumnIndex(COLUMN_IS_LIKED);
+                return index != -1 && cursor.getInt(index) == 1;
+            } else {
+                ContentValues values = new ContentValues();
+                values.put(COLUMN_USER_ID, userId);
+                values.put(COLUMN_FOOD_ID, foodId);
+                values.put(COLUMN_IS_LIKED, 0);
+                db.insert(TABLE_LIKES, null, values);
+                return false;
+            }
+        } catch (Exception e) {
+            Log.e("DatabaseHelper", "Lỗi khi truy cập cơ sở dữ liệu: " + e.getMessage());
+            return false;
+        } finally {
+            if (cursor != null) {
                 cursor.close();
             }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
         }
-        return false;
     }
+    public List<String> getLikedFoodIds(String userId) {
+        List<String> likedFoodIds = new ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        try {
+            cursor = db.query(TABLE_LIKES, new String[]{COLUMN_FOOD_ID},
+                    COLUMN_USER_ID + " = ? AND " + COLUMN_IS_LIKED + " = ?",
+                    new String[]{userId, "1"}, null, null, null);
+            if (cursor != null) {
+                while (cursor.moveToNext()) {
+                    int index = cursor.getColumnIndex(COLUMN_FOOD_ID);
+                    if (index != -1) {
+                        likedFoodIds.add(cursor.getString(index));
+                    }
+                }
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (db != null && db.isOpen()) {
+                db.close();
+            }
+        }
+        return likedFoodIds;
+    }
+    
 
 }
 
