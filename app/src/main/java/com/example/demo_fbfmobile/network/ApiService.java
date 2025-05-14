@@ -63,8 +63,11 @@ public interface ApiService {
     @POST("/api/v1/fbf-orders/{orderId}/confirm")
     Call<ApiResponse<String>> confirmOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
 
-    @DELETE("/api/v1/fbf-orders/{orderId}/undo")
+    @POST("/api/v1/fbf-orders/{orderId}/undo")
     Call<ApiResponse<String>> undoOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
+
+    @DELETE("/api/v1/fbf-orders/{orderId}/delete-canceled")
+    Call<ApiResponse<String>> deleteCanceledOrder(@Header("Authorization") String authToken, @Path("orderId") Long orderId);
 
     @GET("api/v1/users/me")
     Call<ApiResponse<FbfUserDto>> getCurrentUser(@Header("Authorization") String authToken);

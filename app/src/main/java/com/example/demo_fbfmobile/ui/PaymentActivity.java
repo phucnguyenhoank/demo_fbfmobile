@@ -22,19 +22,25 @@ import com.example.demo_fbfmobile.network.ApiClient;
 import com.example.demo_fbfmobile.network.ApiService;
 import com.example.demo_fbfmobile.utils.TokenManager;
 
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.util.Date;
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
-    private TextView tvOrderId, textAddress, texttotalPrice;
-    private TextView textTimer;
+    private TextView tvOrderId, textAddress, textTotalPrice, textTimer;
     private Button btnPay;
     private Long orderId;
     private Double totalPrice;
     private String address;
     private CountDownTimer countDownTimer;
     private boolean isPaid = false;
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,28 +54,24 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
         tvOrderId = findViewById(R.id.tvOrderId);
+        textAddress = findViewById(R.id.textAddress);
+        textTotalPrice = findViewById(R.id.textTotalPrice);
         textTimer = findViewById(R.id.textTimer);
         btnPay = findViewById(R.id.btnPay);
-        texttotalPrice = findViewById(R.id.textTotalPrice);
-        textAddress = findViewById(R.id.textAddress);
+
         orderId = getIntent().getLongExtra("orderId", -1);
         totalPrice = getIntent().getDoubleExtra("totalPrice", 0);
         address = getIntent().getStringExtra("address");
-        if (totalPrice == 0 || address == null){
-            getTotalPriceAndAddressByOrderId(orderId);
-        }
-        Log.d("Payment activity", "orderId: " + orderId + " totalPrice: " + totalPrice + " address: " + address);
-        tvOrderId.setText("OrderID: " + orderId);
-        textAddress.setText(address);
-        texttotalPrice.setText(String.format("%.2f VND", totalPrice));
+
         if (orderId == -1) {
             Toast.makeText(this, "Không tìm thấy đơn hàng", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Khởi động bộ đếm ngược 3 phút
-        startPaymentTimer();
+        tvOrderId.setText("OrderID: " + orderId);
+
+        fetchOrderDetailsAndStartTimer();
 
         btnPay.setOnClickListener(v -> {
             isPaid = true;
@@ -79,50 +81,86 @@ public class PaymentActivity extends AppCompatActivity {
         });
     }
 
-    private void startPaymentTimer() {
-        countDownTimer = new CountDownTimer(3 * 60 * 1000, 1000) { // 3 phút
-            @Override
-            public void onTick(long millisUntilFinished) {
-                long seconds = millisUntilFinished / 1000;
-                long minutes = seconds / 60;
-                seconds = seconds % 60;
-                textTimer.setText(String.format("Thời gian còn lại: %d:%02d", minutes, seconds));
-            }
-
-            @Override
-            public void onFinish() {
-                if (!isPaid) {
-                    Toast.makeText(PaymentActivity.this, "Đơn hàng đã bị hủy do hết thời gian thanh toán", Toast.LENGTH_SHORT).show();
-                    finish(); // Đóng Activity khi hết thời gian
-                }
-            }
-        }.start();
-    }
-    private void getTotalPriceAndAddressByOrderId(Long orderid){
+    private void fetchOrderDetailsAndStartTimer() {
         String token = new TokenManager(this).getToken();
         if (token == null || token.isEmpty()) {
             Toast.makeText(this, "Vui lòng đăng nhập lại", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+
         String authToken = "Bearer " + token;
         ApiService apiService = ApiClient.getApiService();
-        apiService.getOrderByOrderId(authToken, orderid).enqueue(new Callback<ApiResponse<FbfOrderDto>>() {
+        apiService.getOrderByOrderId(authToken, orderId).enqueue(new Callback<ApiResponse<FbfOrderDto>>() {
             @Override
             public void onResponse(Call<ApiResponse<FbfOrderDto>> call, Response<ApiResponse<FbfOrderDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Log.d("Payment activity", "Lấy Address, TotalPrice thành công" + response.body() + orderid);
-                    texttotalPrice.setText(String.format("%.2f VND", response.body().getData().getDiscountedTotalPrice()));
-                    textAddress.setText(response.body().getData().getAddress());
+                    FbfOrderDto order = response.body().getData();
+
+                    if (totalPrice == 0) {
+                        totalPrice = order.getDiscountedTotalPrice();
+                    }
+                    if (address == null) {
+                        address = order.getAddress();
+                    }
+
+                    textTotalPrice.setText(String.format("%.2f VND", totalPrice));
+                    textAddress.setText(address);
+
+
+                    String createdAtStr = order.getCreatedAt(); // ISO 8601, dạng chuỗi "2025-05-14T09:31:19.400409"
+                    try {
+                        Date createdAt = sdf.parse(createdAtStr);
+                        long elapsedMillis = System.currentTimeMillis() - createdAt.getTime();
+                        long remainingMillis = (3 * 60 * 1000) - elapsedMillis;
+//
+//                        LocalDateTime createdAt = LocalDateTime.parse(createdAtStr);
+//                        Duration duration = Duration.between(createdAt, LocalDateTime.now());
+//                        long elapsedMillis = duration.toMillis();
+//                        long remainingMillis = (3 * 60 * 1000) - elapsedMillis;
+
+                        if (remainingMillis > 0) {
+                            countDownTimer = new CountDownTimer(remainingMillis, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                    long seconds = millisUntilFinished / 1000;
+                                    long minutes = seconds / 60;
+                                    seconds = seconds % 60;
+                                    textTimer.setText(String.format("Thời gian còn lại: %d:%02d", minutes, seconds));
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                    if (!isPaid) {
+                                        Toast.makeText(PaymentActivity.this, "Đơn hàng đã bị hủy do hết thời gian thanh toán", Toast.LENGTH_SHORT).show();
+                                        redirectToMainActivity();
+                                    }
+                                }
+                            }.start();
+                        } else {
+                            Toast.makeText(PaymentActivity.this, "Đơn hàng đã hết thời gian thanh toán", Toast.LENGTH_SHORT).show();
+                            redirectToMainActivity();
+                        }
+                    } catch (Exception e) {
+                        Log.e("PaymentActivity", "Lỗi khi phân tích createdAt: " + e.getMessage());
+                        Toast.makeText(PaymentActivity.this, "Lỗi thời gian tạo đơn hàng", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                } else {
+                    Toast.makeText(PaymentActivity.this, "Không thể lấy thông tin đơn hàng", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<FbfOrderDto>> call, Throwable t) {
-                Log.d("Payment activity", "Loi Kết nối");
+                Log.e("PaymentActivity", "Lỗi kết nối API: " + t.getMessage());
+                Toast.makeText(PaymentActivity.this, "Lỗi kết nối", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
     }
+
     private void confirmOrder() {
         String token = new TokenManager(this).getToken();
         if (token == null || token.isEmpty()) {
@@ -139,31 +177,33 @@ public class PaymentActivity extends AppCompatActivity {
             public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Toast.makeText(PaymentActivity.this, "Thanh toán thành công", Toast.LENGTH_LONG).show();
-                    // Chuyển sang MainActivity và xóa stack
-                    Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-//                    finish(); // Đóng PaymentActivity sau khi chuyển
+                    redirectToMainActivity();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(PaymentActivity.this, "Thanh toán thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();
-                    btnPay.setEnabled(true); // Cho phép thử lại nếu thất bại
+                    btnPay.setEnabled(true);
                 }
             }
 
             @Override
             public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
                 Toast.makeText(PaymentActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                btnPay.setEnabled(true); // Cho phép thử lại nếu lỗi mạng
+                btnPay.setEnabled(true);
             }
         });
+    }
+
+    private void redirectToMainActivity() {
+        Intent intent = new Intent(PaymentActivity.this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (countDownTimer != null) {
-            countDownTimer.cancel(); // Hủy bộ đếm khi activity bị hủy
+            countDownTimer.cancel();
         }
     }
 }
