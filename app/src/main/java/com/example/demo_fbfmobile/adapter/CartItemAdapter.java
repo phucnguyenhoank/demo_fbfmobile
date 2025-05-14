@@ -40,18 +40,24 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     private String authToken;
     private Context context;
 
-    public CartItemAdapter(List<CartItemDisplay> cartItems, Context context) {
+    private OnItemClickListener listener;
+
+    public CartItemAdapter(List<CartItemDisplay> cartItems, Context context, OnItemClickListener listener) {
         this.cartItems = cartItems;
         this.context = context;
         this.authToken = "Bearer " + new TokenManager(context).getToken();
+        this.listener = listener;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public interface OnItemClickListener {
+        void onItemClick();
+    }
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        boolean isSpinnerInitialized = false;
         ImageView imageFood;
         TextView textFoodName, textPrice, textQuantity;
         Spinner spinnerSize;
-        Button btnDecrease, btnIncrease;
-        ImageView btnDelete;
+        ImageView btnDecrease, btnIncrease, btnDelete;
 
         CheckBox checkboxSelect;
 
@@ -66,6 +72,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             btnIncrease = itemView.findViewById(R.id.btnIncrease);
             btnDelete = itemView.findViewById(R.id.btnDelete);
             checkboxSelect = itemView.findViewById(R.id.checkboxSelect);
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick();
+                }
+            });
         }
     }
 
@@ -86,7 +97,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.checkboxSelect.setChecked(item.isSelected());
         holder.checkboxSelect.setOnCheckedChangeListener((buttonView, isChecked) -> {
             item.setSelected(isChecked);
+            if ( listener != null){
+                listener.onItemClick();
+            }
         });
+
 
         Glide.with(holder.imageFood.getContext())
                 .load(item.getFoodImageUrl())
@@ -101,8 +116,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
         int selectedIndex = sizeOptions.indexOf(item.getSize());
         if (selectedIndex >= 0) {
-            holder.spinnerSize.setSelection(selectedIndex);
+            holder.spinnerSize.setTag("initializing");
+            holder.spinnerSize.setSelection(selectedIndex, false);
+            holder.spinnerSize.setTag(null);
         }
+
 
         // Xử lý nút xóa
         holder.btnDelete.setOnClickListener(v -> {
@@ -174,6 +192,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                     Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                 }
             });
+            if (listener != null) {
+                listener.onItemClick();
+            }
         });
 
         // Xử lý nút giảm số lượng
@@ -216,6 +237,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                         Toast.makeText(context, "Lỗi mạng", Toast.LENGTH_SHORT).show();
                     }
                 });
+                if (listener != null) {
+                    listener.onItemClick();
+                }
             }
         });
 
@@ -223,6 +247,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.spinnerSize.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                if ("initializing".equals(holder.spinnerSize.getTag())) return;
                 int adapterPosition = holder.getBindingAdapterPosition();
                 if (adapterPosition == RecyclerView.NO_POSITION) return;
 
@@ -250,8 +275,13 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                                 Toast.makeText(context, "Cập nhật kích thước thất bại", Toast.LENGTH_SHORT).show();
                             }
                             else {
+                                Double newPrice = response.body().getData().getPrice();
+                                item.setPrice(newPrice);
                                 NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
                                 holder.textPrice.setText("Đơn giá: " + nf.format(response.body().getData().getPrice()) + " VND");
+                                if (listener != null) {
+                                    listener.onItemClick();
+                                }
                             }
                         }
 

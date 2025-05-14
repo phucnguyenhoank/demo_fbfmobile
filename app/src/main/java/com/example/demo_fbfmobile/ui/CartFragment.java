@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ public class CartFragment extends Fragment {
     private ApiService apiService;
     private RecyclerView recyclerView;
     private CartItemAdapter adapter;
+    private TextView textTotalPriceCart;
     private List<CartItemDisplay> cartItems = new ArrayList<>();
     private Button btnCreateOrder;
 
@@ -55,10 +57,13 @@ public class CartFragment extends Fragment {
         // Khởi tạo views
         recyclerView = view.findViewById(R.id.recyclerViewCart);
         btnCreateOrder = view.findViewById(R.id.btnCreateOrder);
+        textTotalPriceCart = view.findViewById(R.id.textTotalPriceCart);
 
         // Thiết lập RecyclerView
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        adapter = new CartItemAdapter(cartItems, requireContext());
+        adapter = new CartItemAdapter(cartItems, requireContext(), () -> {
+            updateTotalPrice();
+        });
         recyclerView.setAdapter(adapter);
 
         // Khởi tạo API
@@ -83,6 +88,30 @@ public class CartFragment extends Fragment {
             intent.putParcelableArrayListExtra("selectedItems", new ArrayList<>(selectedItems));
             startActivity(intent);
         });
+    }
+
+    private void updateTotalPrice(){
+        Log.d("Information CartFragment", "recycleView clicked");
+        List<CartItemDisplay> selectedItems = new ArrayList<>();
+        for (CartItemDisplay item : cartItems) {
+            if (item.isSelected()) {
+                selectedItems.add(item);
+            }
+        }
+        if (selectedItems.isEmpty()) {
+            textTotalPriceCart.setText("Tổng Giá: 0 VNĐ");
+            return;
+        }
+        else {
+            Double totalPriceCartItem = 0.0;
+            for (CartItemDisplay item : selectedItems){
+                int quantity = item.getQuantity();
+                Double price = item.getPrice();
+                totalPriceCartItem += quantity * price;
+                Log.d("Information CartFragment", "totalPriceCartItem: " + totalPriceCartItem + "price: " + price);
+            }
+            textTotalPriceCart.setText("Tổng tiền: " + totalPriceCartItem + " VND");
+        }
     }
 
     private void fetchCartItems() {

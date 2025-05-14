@@ -48,6 +48,20 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@color/colorOrangeBase"/>
+        <TextView
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tổng Giá: 0 VNĐ"
+            android:layout_gravity="center_vertical"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:id="@+id/textTotalPriceCart"/>
         <Button
             android:layout_marginTop="10dp"
             android:id="@+id/btnCreateOrder"
