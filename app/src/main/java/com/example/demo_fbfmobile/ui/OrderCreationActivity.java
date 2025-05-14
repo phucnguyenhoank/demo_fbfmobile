@@ -155,7 +155,6 @@ public class OrderCreationActivity extends AppCompatActivity {
                     intent.putExtra("address", orderDto.getAddress());
                     intent.putExtra("orderId", orderDto.getId());
                     startActivity(intent);
-//                    finish();
                 } else {
                     String errorMsg = response.body() != null ? response.body().getMessage() : "Lỗi không xác định";
                     Toast.makeText(OrderCreationActivity.this, "Tạo đơn hàng thất bại: " + errorMsg, Toast.LENGTH_SHORT).show();

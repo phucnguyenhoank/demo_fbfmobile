@@ -15,8 +15,10 @@ import com.example.demo_fbfmobile.R;
 import com.example.demo_fbfmobile.model.FbfOrderDto;
 import com.example.demo_fbfmobile.ui.PaymentActivity;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
     private final List<FbfOrderDto> orders = new ArrayList<>();
@@ -52,7 +54,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         FbfOrderDto o = orders.get(position);
         holder.tvOrderId.setText("Mã hóa đơn #" + o.getId());
         holder.tvOrderDate.setText("Ngày tạo: " + o.getCreatedAt().replace("T", " ").substring(0, 16));
-        holder.tvTotalPrice.setText("Tổng: " + o.getDiscountedTotalPrice() + " VND");
+        NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
+        double discountPercentage = o.getDiscountCode().getDiscountPercentage();
+        if (discountPercentage > 0) {
+            holder.tvTotalPrice.setText("Tổng: " + nf.format(o.getDiscountedTotalPrice()) + " VND (-" + discountPercentage + "%)");
+        }
+        else {
+            holder.tvTotalPrice.setText("Tổng: " + nf.format(o.getDiscountedTotalPrice()) + " VND");
+        }
+
         holder.tvStatus.setText(o.getStatus());
 
         // 3. Gán sự kiện click
