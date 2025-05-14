@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.demo_fbfmobile.ui.CartFragment;
+import com.example.demo_fbfmobile.ui.HelpFragment;
 import com.example.demo_fbfmobile.ui.HomeActivity;
 import com.example.demo_fbfmobile.ui.HomeFragment;
 import com.example.demo_fbfmobile.ui.LoginActivity;
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
 
+            }
+            else if (id == R.id.menu_help) {
+                selectedFragment = new HelpFragment();
             }
 
             if (selectedFragment != null) {
