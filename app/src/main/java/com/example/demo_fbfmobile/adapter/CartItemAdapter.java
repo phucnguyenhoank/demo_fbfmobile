@@ -129,7 +129,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             holder.spinnerSize.setTag(null);
         }
 
-
         // Xử lý nút xóa
         holder.btnDelete.setOnClickListener(v -> {
             int adapterPosition = holder.getBindingAdapterPosition();
@@ -150,6 +149,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                         cartItems.remove(currentPosition);
                         notifyItemRemoved(currentPosition);
                         notifyItemRangeChanged(currentPosition, cartItems.size());
+                        if (listener != null) {
+                            listener.onItemClick(); // Cập nhật tổng giá
+                        }
                     } else {
                         Toast.makeText(context, "Xóa thất bại", Toast.LENGTH_SHORT).show();
                     }

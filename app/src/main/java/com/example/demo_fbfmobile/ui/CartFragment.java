@@ -104,6 +104,9 @@ public class CartFragment extends Fragment {
             }
         }
         if (selectedItems.isEmpty()) {
+            textTotalOriginalPriceCart.setPaintFlags(
+                    textTotalOriginalPriceCart.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG)
+            );
             textTotalOriginalPriceCart.setVisibility(View.VISIBLE);
             textTotalDiscountedPriceCart.setVisibility(View.GONE);
             textTotalOriginalPriceCart.setText("Tổng giá gốc: 0 VND");

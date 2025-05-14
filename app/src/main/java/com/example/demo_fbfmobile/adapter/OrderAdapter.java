@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -81,6 +82,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
                 Intent intent = new Intent(v.getContext(), PaymentActivity.class);
                 intent.putExtra("orderId", o.getId());
                 v.getContext().startActivity(intent);
+            }
+            else {
+                Toast.makeText(v.getContext(), "This order was canceled", Toast.LENGTH_SHORT).show();
             }
 
 
