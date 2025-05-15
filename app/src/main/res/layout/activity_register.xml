@@ -175,7 +175,7 @@
                 android:layout_gravity="center"
                 android:textSize="22sp"
                 android:backgroundTint="@color/colorOrangeBase"
-                android:text="Đăng Ký" />
+                android:text="Đăng ký" />
 
             <TextView
                 android:layout_width="wrap_content"

@@ -73,7 +73,7 @@
             android:paddingLeft="20dp"
             android:background="@drawable/layout_edittext"
             android:singleLine="true"
-            android:hint="Tên Đăng Nhập" />
+            android:hint="Tên đăng nhập" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,7 +93,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/layout_edittext"
-                android:hint="Mật Khẩu"
+                android:hint="Mật khẩu"
                 android:paddingLeft="20dp"
                 android:paddingEnd="40dp"
                 android:textSize="20sp"
