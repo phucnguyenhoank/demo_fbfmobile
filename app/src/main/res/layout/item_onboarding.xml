@@ -26,11 +26,12 @@
         android:id="@+id/btnnextarrow"
         />
     <TextView
+        android:id="@+id/txtnextarrow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toStartOf="@id/btnnextarrow"
-        android:text="Skip"
+        android:text="Bỏ qua"
         android:textColor="@color/colorOrangeBase"
         android:layout_marginTop="10dp"
         android:textSize="20sp"
