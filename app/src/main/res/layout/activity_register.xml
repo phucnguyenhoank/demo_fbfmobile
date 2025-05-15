@@ -7,12 +7,15 @@
     android:layout_height="match_parent"
     android:background="@color/colorYellowBase"
     tools:context=".ui.RegisterActivity">
+
     <ImageView
+        android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginTop="44dp"
         android:src="@drawable/backiconarrow"
+        android:background="?attr/selectableItemBackgroundBorderless"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,21 +26,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Đăng Ký"
+        android:text="Đăng ký"
         android:textStyle="bold"
         android:textColor="@color/white"
-        android:textSize="26sp"
-        />
+        android:textSize="26sp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_marginTop="110dp"
-        android:background="@color/white"
+        android:layout_marginTop="100dp"
         android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingStart="30dp"
             android:paddingEnd="30dp"
@@ -47,7 +48,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Tên Đăng Nhập"
+                android:text="Tên đăng nhập"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
@@ -57,17 +58,16 @@
                 android:paddingLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:textSize="20sp"
-                android:hint="Tên Đăng Nhập"
+                android:hint="Tên đăng nhập"
                 android:textColor="@color/black"
                 android:background="@drawable/layout_edittext" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:text="Mật Khẩu"
+                android:layout_marginTop="10dp"
+                android:text="Mật khẩu"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
@@ -79,15 +79,14 @@
                 android:layout_height="40dp"
                 android:paddingLeft="20dp"
                 android:textSize="20sp"
-                android:layout_marginTop="5dp"
-                android:hint="Mật Khẩu"
+                android:hint="Mật khẩu"
                 android:inputType="textPassword" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/black"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
@@ -100,15 +99,14 @@
                 android:hint="Email"
                 android:paddingLeft="20dp"
                 android:textSize="20sp"
-                android:layout_marginTop="5dp"
                 android:inputType="textEmailAddress" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Họ và Tên"
+                android:text="Họ và tên"
                 android:textColor="@color/black"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:textStyle="bold"
                 android:textSize="20sp"/>
 
@@ -116,28 +114,26 @@
                 android:id="@+id/etName"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginTop="5dp"
                 android:textSize="20sp"
                 android:paddingLeft="20dp"
                 android:background="@drawable/layout_edittext"
-                android:hint="Họ và Tên" />
+                android:hint="Họ và tên" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Số Điện Thoại"
+                android:text="Số điện thoại"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/etPhoneNumber"
                 android:layout_width="match_parent"
-                android:layout_marginTop="5dp"
                 android:layout_height="40dp"
                 android:textSize="20sp"
-                android:hint="Số Điện Thoại"
+                android:hint="Số điện thoại"
                 android:paddingLeft="20dp"
                 android:background="@drawable/layout_edittext"
                 android:inputType="phone" />
@@ -145,21 +141,20 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Địa Chỉ"
+                android:text="Địa chỉ"
                 android:textColor="@color/black"
                 android:textStyle="bold"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/etAddress"
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
                 android:textSize="20sp"
                 android:layout_height="40dp"
                 android:paddingLeft="20dp"
                 android:background="@drawable/layout_edittext"
-                android:hint="Địa Chỉ" />
+                android:hint="Địa chỉ" />
 
             <TextView
                 android:layout_width="280dp"

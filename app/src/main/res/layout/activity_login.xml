@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Đăng Nhập"
+        android:text="Đăng nhập"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp"
@@ -59,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tên Đăng Nhập"
+            android:text="Tên đăng nhập"
             android:layout_marginTop="30dp"
             android:textStyle="bold"
             android:textSize="20sp"
@@ -78,7 +78,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Mật Khẩu"
+            android:text="Mật khẩu"
             android:layout_marginTop="20dp"
             android:textStyle="bold"
             android:textSize="20sp"
@@ -114,12 +114,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:layout_marginStart="220dp"
+            android:layout_marginStart="200dp"
             android:textColor="@color/colorOrangeBase"
             android:textStyle="bold"
-            android:text="Quên Mật Khẩu?"
-            android:onClick="onForgotPasswordClick"
-            />
+            android:text="Quên mật khẩu?"
+            android:onClick="onForgotPasswordClick" />
         <Button
             android:layout_marginTop="20dp"
             android:id="@+id/btnLogin"
@@ -128,7 +127,7 @@
             android:textColor="@color/white"
             android:layout_gravity="center"
             android:backgroundTint="@color/colorOrangeBase"
-            android:text="Đăng Nhập"
+            android:text="Đăng nhập"
             android:textSize="22sp"
             />
         <TextView
