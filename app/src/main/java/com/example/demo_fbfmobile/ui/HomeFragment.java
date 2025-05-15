@@ -37,8 +37,10 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.slider.Slider;
 
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,13 +53,14 @@ public class HomeFragment extends Fragment {
     private ApiService api;
     private String currentSortOption = "";
     private int currentPageNum = 0, currentPageSize = 10;
-    private double currentMinPrice = 0, currentMaxPrice = 30000;
+    private double currentMinPrice = 0, currentMaxPrice = 100000;
     private String currentSearchFoodName = "";
     private Long currentSearchCategoryId = 0L;
     private androidx.appcompat.widget.SearchView svFoodName;
     private TextView tvSimpleUserInfo;
 
     List<LinearLayout> categories;
+    NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
 
     public HomeFragment() {
         // Required empty public constructor
@@ -194,7 +197,7 @@ public class HomeFragment extends Fragment {
                 }
             });
         } else {
-            tvSimpleUserInfo.setText("No token found. Please login.");
+            tvSimpleUserInfo.setText("FastBreakfast xin chào");
         }
     }
 
@@ -240,6 +243,8 @@ public class HomeFragment extends Fragment {
 
         Slider priceMinSlider = bottomSheetView.findViewById(R.id.priceMinSlider);
         Slider priceMaxSlider = bottomSheetView.findViewById(R.id.priceMaxSlider);
+        TextView tvPriceMinLabel = bottomSheetView.findViewById(R.id.tvPriceMinLabel);
+        TextView tvPriceMaxLabel = bottomSheetView.findViewById(R.id.tvPriceMaxLabel);
         RadioGroup radioFieldSort = bottomSheetView.findViewById(R.id.radioFieldSort);
         RadioGroup radioDirectionSort = bottomSheetView.findViewById(R.id.radioDirectionSort);
         Button btnApplyFilter = bottomSheetView.findViewById(R.id.btnApplyFilter);
@@ -247,6 +252,18 @@ public class HomeFragment extends Fragment {
 
         priceMinSlider.setValue((float) currentMinPrice);
         priceMaxSlider.setValue((float) currentMaxPrice);
+
+        // Cập nhật label thủ công, vì onChangeListener chưa được gọi
+        tvPriceMinLabel.setText("Giá thấp nhất: " + nf.format((int) currentMinPrice) + " VND");
+        tvPriceMaxLabel.setText("Giá cao nhất: " + nf.format((int) currentMaxPrice) + " VND");
+
+        // Gán sự kiện để cập nhật giá khi thay đổi slider
+        priceMinSlider.addOnChangeListener((slider, value, fromUser) -> {
+            tvPriceMinLabel.setText("Giá thấp nhất: " + nf.format((int) value) + " VND");
+        });
+        priceMaxSlider.addOnChangeListener((slider, value, fromUser) -> {
+            tvPriceMaxLabel.setText("Giá cao nhất: " + nf.format((int) value) + " VND");
+        });
 
         if (!currentSortOption.isEmpty()) {
             String[] parts = currentSortOption.split(",");
@@ -293,14 +310,13 @@ public class HomeFragment extends Fragment {
         btnClearFilter.setOnClickListener(view -> {
             currentSortOption = "";
             currentMinPrice = 0;
-            currentMaxPrice = 300000;
+            currentMaxPrice = 100000;
             currentSearchFoodName = "";
             currentSearchCategoryId = 0L;
 
             updateSortText();
             svFoodName.setQuery("", false);
             svFoodName.clearFocus();
-
 
             for (LinearLayout cat : categories) {
                 cat.setBackgroundResource(R.drawable.bg_rounded_category);
@@ -315,7 +331,25 @@ public class HomeFragment extends Fragment {
 
     private void updateSortText() {
         TextView tvSort = getView().findViewById(R.id.tvSort);
-        tvSort.setText(currentSortOption);
+        String friendlyText = getFriendlySortText(currentSortOption);
+        tvSort.setText(friendlyText);
+    }
+
+    private String getFriendlySortText(String option) {
+        switch (option) {
+            case "":
+                return "Xếp mặc định";
+            case "id,asc":
+                return "ID tăng dần";
+            case "id,desc":
+                return "ID giảm dần";
+            case "name,asc":
+                return "Tên (A-Z)";
+            case "name,desc":
+                return "Tên (Z-A)";
+            default:
+                return "Không rõ";
+        }
     }
 
     private void onProfileClick(View view) {

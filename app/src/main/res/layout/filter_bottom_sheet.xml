@@ -11,6 +11,13 @@
         android:layout_height="wrap_content"
         android:text="Chọn khoảng giá" />
 
+    <TextView
+        android:id="@+id/tvPriceMinLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Giá thấp nhất: 0 VND"
+        android:layout_marginTop="8dp" />
+
     <com.google.android.material.slider.Slider
         android:id="@+id/priceMinSlider"
         android:layout_width="match_parent"
@@ -19,6 +26,13 @@
         android:valueTo="300000"
         android:stepSize="1000"
         android:value="0" />
+
+    <TextView
+        android:id="@+id/tvPriceMaxLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Giá cao nhất: 100000 VND"
+        android:layout_marginTop="8dp" />
 
     <com.google.android.material.slider.Slider
         android:id="@+id/priceMaxSlider"
