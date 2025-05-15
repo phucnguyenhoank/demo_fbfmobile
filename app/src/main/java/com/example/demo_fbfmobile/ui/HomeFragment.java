@@ -210,7 +210,7 @@ public class HomeFragment extends Fragment {
                         String displayText = "Chào buổi sáng, " + username;
                         tvSimpleUserInfo.setText(displayText);
                     } else {
-                        tvSimpleUserInfo.setText("❌ Failed to access secured API");
+                        tvSimpleUserInfo.setText("FastBreakfast xin chào");
                     }
                 }
 
@@ -254,6 +254,9 @@ public class HomeFragment extends Fragment {
     }
 
     private void updatePaginationUI() {
+        if (getView() == null) {
+            return;
+        }
         TextView tvPageInfo = getView().findViewById(R.id.tvPageInfo);
         ImageView ivPrevious = getView().findViewById(R.id.ivPrevious);
         ImageView ivNext = getView().findViewById(R.id.ivNext);

@@ -148,6 +148,7 @@ public class CartFragment extends Fragment {
     private void fetchCartItems() {
         TokenManager tokenManager = new TokenManager(requireContext());
         String token = tokenManager.getToken();
+        Log.d("CartFragment", token);
         if (token != null) {
             Call<ApiResponse<List<CartItemDisplay>>> call = apiService.getCartItemsDisplay("Bearer " + token);
             call.enqueue(new Callback<ApiResponse<List<CartItemDisplay>>>() {

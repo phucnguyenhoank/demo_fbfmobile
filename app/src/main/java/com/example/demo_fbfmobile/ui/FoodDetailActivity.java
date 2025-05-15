@@ -117,7 +117,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         btnAddToCart.setOnClickListener(v -> addToCart());
 
-        Button btnGoToCart = findViewById(R.id.btnGoToCart);
+        ImageView btnGoToCart = findViewById(R.id.btnGoToCart);
         btnGoToCart.setOnClickListener(v -> {
             Intent intent = new Intent(FoodDetailActivity.this, MainActivity.class);
             intent.putExtra("openFragment", "cart");
