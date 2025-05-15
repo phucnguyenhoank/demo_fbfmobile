@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
     // Phương thức xử lý click cho txtForgotPassword
     public void onForgotPasswordClick(View view) {
-        Toast.makeText(this, "Forgot Password clicked!", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, "Forgot Password clicked!", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(LoginActivity.this, ResetPasswordActivity.class);
         startActivity(intent);
     }
