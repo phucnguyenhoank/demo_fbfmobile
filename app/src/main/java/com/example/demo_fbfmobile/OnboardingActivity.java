@@ -41,7 +41,7 @@ public class OnboardingActivity extends AppCompatActivity {
         circleIndicator3 = findViewById(R.id.circle_indicators);
         handler = new Handler();
         onBoardingList = getOnBoardingList();
-        OnboardingAdapter adapter = new OnboardingAdapter(onBoardingList);
+        OnboardingAdapter adapter = new OnboardingAdapter(onBoardingList, viewPager2);
         viewPager2.setAdapter(adapter);
         circleIndicator3.setViewPager(viewPager2);
         runnable = new Runnable() {
