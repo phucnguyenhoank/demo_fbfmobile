@@ -25,7 +25,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Chi Tiết Hóa Đơn"
+        android:text="Chi tiết hóa đơn"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp"

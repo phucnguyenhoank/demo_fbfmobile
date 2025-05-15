@@ -6,16 +6,14 @@
     <string name="favorite_action">Favorite</string>
     <string name="order_action">Order</string>
     <string name="help_action">Help</string>
-    <string name="onboarding_a_title">Order For Food</string>
-    <string name="onboarding_a_desc">Order quickly and conveniently</string>
-    <string name="onboarding_b_title">Easy Payment</string>
-    <string name="onboarding_b_desc">Pay with your card, QR code or cash</string>
-    <string name="onboarding_c_title">Fast Delivery</string>
-    <string name="onboarding_c_desc">Fast delivery to your door</string>
-    <string name="onboarding_a_btndesc">Next</string>
-    <string name="onboarding_c_btndesc">Get Started</string>
-    <string name="api_server_ip">192.168.1.15</string>
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="onboarding_a_title">Đặt đồ ăn</string>
+    <string name="onboarding_a_desc">Đặt hàng nhanh và tiện lợi</string>
+    <string name="onboarding_b_title">Thanh toán dễ dàng</string>
+    <string name="onboarding_b_desc">Thanh toán với thẻ, mã QR, hoặc tiền mặt</string>
+    <string name="onboarding_c_title">Giao hàng tốc độ</string>
+    <string name="onboarding_c_desc">Đồ ăn đến cửa nhà của bạn khi còn nóng hổi</string>
+    <string name="onboarding_a_btndesc">Tiếp</string>
+    <string name="onboarding_c_btndesc">Bắt đầu</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
