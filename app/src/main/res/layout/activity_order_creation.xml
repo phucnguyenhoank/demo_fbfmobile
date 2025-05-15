@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorYellowBase"
-    android:orientation="vertical"
+    android:windowSoftInputMode="adjustResize"
     tools:context=".ui.OrderCreationActivity">
 
     <ImageView
@@ -42,10 +42,11 @@
         android:background="@drawable/linearlayoutbackgroud"
         android:layout_marginTop="100dp">
 
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fillViewport="true"
+            android:id="@+id/scrollView"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -163,7 +164,7 @@
                     android:text="Xác nhận" />
 
             </LinearLayout>
-        </ScrollView>
+        </androidx.core.widget.NestedScrollView>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
