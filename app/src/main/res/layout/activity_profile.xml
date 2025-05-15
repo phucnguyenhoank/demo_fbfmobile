@@ -127,7 +127,6 @@
             android:id="@+id/tvLabelPhone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@color/black"
@@ -136,6 +135,7 @@
             android:id="@+id/etPhone"
             android:layout_width="match_parent"
             android:textColor="@color/black"
+            android:layout_marginBottom="8dp"
             android:layout_height="45dp"
             android:paddingLeft="20dp"
             android:background="@drawable/layout_edittext"
@@ -148,7 +148,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Địa chỉ"
-            android:layout_marginBottom="8dp"
             android:textStyle="bold"
             android:textSize="16sp"
             android:textColor="@color/black"/>
