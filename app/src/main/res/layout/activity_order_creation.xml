@@ -27,7 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Xác Nhận Đơn Hàng"
+        android:text="Xác nhận đơn hàng"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp" />
@@ -98,7 +98,7 @@
                     android:id="@+id/tvLabelAddress"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Address"
+                    android:text="Địa chỉ giao hàng"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@color/black"
@@ -121,7 +121,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="Số Điện Thoại"/>
+                    android:text="Số điện thoại"/>
                 <EditText
                     android:id="@+id/editPhone"
                     android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="Mã Giảm Giá"/>
+                    android:text="Mã giảm giá"/>
 
                 <EditText
                     android:id="@+id/editDiscountCode"
