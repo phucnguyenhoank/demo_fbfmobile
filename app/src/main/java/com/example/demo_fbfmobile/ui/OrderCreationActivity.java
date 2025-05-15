@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,19 +44,14 @@ public class OrderCreationActivity extends AppCompatActivity {
     private EditText editPhone, editAddress, editDiscountCode;
     private Button btnConfirmOrder;
     private RecyclerView recyclerViewOrderItems;
+    private NestedScrollView scrollView;
     private TextView textTotalPrice;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+//        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_order_creation);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
-
         selectedItems = getIntent().getParcelableArrayListExtra("selectedItems");
         if (selectedItems == null || selectedItems.isEmpty()) {
             Toast.makeText(this, "Không có sản phẩm nào được chọn", Toast.LENGTH_SHORT).show();
@@ -65,6 +61,7 @@ public class OrderCreationActivity extends AppCompatActivity {
 
         recyclerViewOrderItems = findViewById(R.id.recyclerViewOrderItems);
         editPhone = findViewById(R.id.editPhone);
+        scrollView = findViewById(R.id.scrollView);
         editAddress = findViewById(R.id.editAddress);
         editDiscountCode = findViewById(R.id.editDiscountCode);
         btnConfirmOrder = findViewById(R.id.btnConfirmOrder);
@@ -102,6 +99,11 @@ public class OrderCreationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        editDiscountCode.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) {
+                scrollView.post(() -> scrollView.scrollTo(0, v.getBottom()));
             }
         });
     }
