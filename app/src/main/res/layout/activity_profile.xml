@@ -10,11 +10,11 @@
 
     <ImageView
         android:id="@+id/ivBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="18dp"
+        android:layout_height="20dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:background="@color/yellow_primary"
+        android:background="?attr/selectableItemBackgroundBorderless"
         android:src="@drawable/backiconarrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

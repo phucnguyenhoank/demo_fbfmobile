@@ -169,11 +169,11 @@ public class HomeFragment extends Fragment {
         // Khởi tạo API
         api = ApiClient.getClient().create(ApiService.class);
 
-        // Thiết lập nút phân trang
-        Button btnPrevious = view.findViewById(R.id.btnPrevious);
-        Button btnNext = view.findViewById(R.id.btnNext);
+        // Thiết lập ImageView phân trang
+        ImageView ivPrevious = view.findViewById(R.id.ivPrevious);
+        ImageView ivNext = view.findViewById(R.id.ivNext);
 
-        btnPrevious.setOnClickListener(v -> {
+        ivPrevious.setOnClickListener(v -> {
             if (currentPageNum > 0) {
                 currentPageNum--;
                 fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
@@ -181,7 +181,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        btnNext.setOnClickListener(v -> {
+        ivNext.setOnClickListener(v -> {
             if (currentPageNum < totalPages - 1) {
                 currentPageNum++;
                 fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
@@ -255,15 +255,15 @@ public class HomeFragment extends Fragment {
 
     private void updatePaginationUI() {
         TextView tvPageInfo = getView().findViewById(R.id.tvPageInfo);
-        Button btnPrevious = getView().findViewById(R.id.btnPrevious);
-        Button btnNext = getView().findViewById(R.id.btnNext);
+        ImageView ivPrevious = getView().findViewById(R.id.ivPrevious);
+        ImageView ivNext = getView().findViewById(R.id.ivNext);
 
         // Hiển thị trang hiện tại (tăng 1 vì API dùng số trang bắt đầu từ 0)
         tvPageInfo.setText("Page " + (currentPageNum + 1) + " of " + totalPages);
-        // Bật/tắt nút Previous: chỉ bật nếu không ở trang đầu
-        btnPrevious.setEnabled(currentPageNum > 0);
-        // Bật/tắt nút Next: chỉ bật nếu không ở trang cuối
-        btnNext.setEnabled(currentPageNum < totalPages - 1);
+        // Bật/tắt ImageView Previous: chỉ bật nếu không ở trang đầu
+        ivPrevious.setEnabled(currentPageNum > 0);
+        // Bật/tắt ImageView Next: chỉ bật nếu không ở trang cuối
+        ivNext.setEnabled(currentPageNum < totalPages - 1);
     }
 
     private void handleSearch(String query) {
