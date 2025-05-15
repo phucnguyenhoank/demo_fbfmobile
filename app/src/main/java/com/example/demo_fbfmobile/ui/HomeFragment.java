@@ -262,7 +262,7 @@ public class HomeFragment extends Fragment {
         ImageView ivNext = getView().findViewById(R.id.ivNext);
 
         // Hiển thị trang hiện tại (tăng 1 vì API dùng số trang bắt đầu từ 0)
-        tvPageInfo.setText("Page " + (currentPageNum + 1) + " of " + totalPages);
+        tvPageInfo.setText((currentPageNum + 1) + " / " + totalPages);
         // Bật/tắt ImageView Previous: chỉ bật nếu không ở trang đầu
         ivPrevious.setEnabled(currentPageNum > 0);
         // Bật/tắt ImageView Next: chỉ bật nếu không ở trang cuối
