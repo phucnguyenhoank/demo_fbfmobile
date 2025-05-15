@@ -36,7 +36,7 @@
         android:layout_marginTop="100dp"
         android:id="@+id/scrollView"
         android:fillViewport="true"
-        android:background="@color/white"
+        android:background="@drawable/linearlayoutbackgroud"
         android:layout_height="match_parent">
 
         <LinearLayout
@@ -61,6 +61,7 @@
                 android:paddingLeft="20dp"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
+                android:singleLine="true"
                 android:textSize="20sp"
                 android:hint="Tên đăng nhập"
                 android:textColor="@color/black"
@@ -78,6 +79,7 @@
             <EditText
                 android:background="@drawable/layout_edittext"
                 android:id="@+id/etPassword"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:paddingLeft="20dp"
@@ -100,6 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:hint="Email"
+                android:singleLine="true"
                 android:paddingLeft="20dp"
                 android:textSize="20sp"
                 android:inputType="textEmailAddress" />
@@ -119,6 +122,7 @@
                 android:layout_height="40dp"
                 android:textSize="20sp"
                 android:paddingLeft="20dp"
+                android:singleLine="true"
                 android:background="@drawable/layout_edittext"
                 android:hint="Họ và tên" />
 
@@ -137,6 +141,7 @@
                 android:layout_height="40dp"
                 android:textSize="20sp"
                 android:hint="Số điện thoại"
+                android:singleLine="true"
                 android:paddingLeft="20dp"
                 android:background="@drawable/layout_edittext"
                 android:inputType="phone" />
@@ -155,6 +160,7 @@
                 android:layout_width="match_parent"
                 android:textSize="20sp"
                 android:layout_height="40dp"
+                android:singleLine="true"
                 android:paddingLeft="20dp"
                 android:background="@drawable/layout_edittext"
                 android:hint="Địa chỉ" />
