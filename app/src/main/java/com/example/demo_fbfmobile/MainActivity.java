@@ -2,7 +2,9 @@ package com.example.demo_fbfmobile;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -20,10 +22,28 @@ public class MainActivity extends AppCompatActivity {
 
     private BottomNavigationView bottomNavigationView;
 
+    private long backPressedTime;
+    private Toast backToast;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Đăng ký callback cho nút back
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (backPressedTime + 2000 > System.currentTimeMillis()) {
+                    if (backToast != null) backToast.cancel();
+                    finish(); // Thoát ứng dụng
+                } else {
+                    backToast = Toast.makeText(getApplicationContext(), "Nhấn lần nữa để thoát", Toast.LENGTH_SHORT);
+                    backToast.show();
+                    backPressedTime = System.currentTimeMillis();
+                }
+            }
+        });
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnItemSelectedListener(item -> {
@@ -88,5 +108,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
+
 
 }
