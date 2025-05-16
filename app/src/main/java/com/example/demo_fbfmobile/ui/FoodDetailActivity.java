@@ -142,7 +142,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             // Chuyển đổi userId từ String sang Long
             userId = Long.parseLong(userIdString);
 
-            // Lấy foodId (giả sử bạn đã có foodId)
+            // Lấy foodId
             String foodIdSelect = String.valueOf(foodId);
 
             // Tạo đối tượng DatabaseHelper để truy cập cơ sở dữ liệu

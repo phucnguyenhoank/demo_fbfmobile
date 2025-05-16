@@ -96,7 +96,7 @@ public class FavoriteFragment extends Fragment {
         }
 
         apiService = apiClient.getApiService();
-        apiService.getAllFoods(0, 10, "name,asc").enqueue(new Callback<PageResponse<FoodDto>>() {
+        apiService.getAllFoods(0, 100, "name,asc").enqueue(new Callback<PageResponse<FoodDto>>() {
             @Override
             public void onResponse(Call<PageResponse<FoodDto>> call, Response<PageResponse<FoodDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
