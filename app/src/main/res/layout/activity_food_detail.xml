@@ -26,7 +26,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="32dp"
-        android:text="Chi Tiết Món Ăn"
+        android:text="Chi tiết món ăn"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:textSize="26sp"
@@ -188,21 +188,28 @@
                 android:text="XL" />
         </RadioGroup>
 
-        <Button
-            android:id="@+id/btnAddToCart"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="Thêm vào giỏ"
-            android:layout_marginTop="16dp" />
-
-        <Button
-            android:id="@+id/btnGoToCart"
-            android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_height="wrap_content"
-            android:text="Giỏ hàng"
-            android:layout_marginTop="16dp" />
+            android:gravity="center"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btnAddToCart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Thêm vào giỏ" />
+            <ImageView
+                android:layout_marginStart="5dp"
+                android:padding="5dp"
+                android:id="@+id/btnGoToCart"
+                android:layout_width="60dp"
+                android:layout_gravity="center_vertical"
+                android:layout_height="40dp"
+                android:background="@drawable/imageviewbackground"
+                android:src="@drawable/ic_cart2" />
+        </LinearLayout>
     </LinearLayout>
 
 

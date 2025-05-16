@@ -86,7 +86,7 @@ public class OnboardingAdapter extends RecyclerView.Adapter<OnboardingAdapter.On
             btnaction.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (btnaction.getText().equals("Get Started")) {
+                    if (btnaction.getText().equals("Bắt đầu")) {
                         Intent intent = new Intent(view.getContext(), MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         view.getContext().startActivity(intent);

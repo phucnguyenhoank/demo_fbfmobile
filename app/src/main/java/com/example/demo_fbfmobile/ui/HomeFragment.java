@@ -58,6 +58,7 @@ public class HomeFragment extends Fragment {
     private Long currentSearchCategoryId = 0L;
     private androidx.appcompat.widget.SearchView svFoodName;
     private TextView tvSimpleUserInfo;
+    private int totalPages = 1; // Mặc định là 1, sẽ cập nhật từ API
 
     List<LinearLayout> categories;
     NumberFormat nf = NumberFormat.getInstance(new Locale("vi", "VN"));
@@ -120,7 +121,9 @@ public class HomeFragment extends Fragment {
             LinearLayout categoryView = categories.get(i);
             categoryView.setOnClickListener(v -> {
                 currentSearchCategoryId = (long) categoryId;
-                fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption, currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
+                currentPageNum = 0; // Đặt lại về trang đầu
+                fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
+                        currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
                 for (LinearLayout cat : categories) {
                     cat.setBackgroundResource(R.drawable.bg_rounded_category);
                 }
@@ -166,6 +169,26 @@ public class HomeFragment extends Fragment {
         // Khởi tạo API
         api = ApiClient.getClient().create(ApiService.class);
 
+        // Thiết lập ImageView phân trang
+        ImageView ivPrevious = view.findViewById(R.id.ivPrevious);
+        ImageView ivNext = view.findViewById(R.id.ivNext);
+
+        ivPrevious.setOnClickListener(v -> {
+            if (currentPageNum > 0) {
+                currentPageNum--;
+                fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
+                        currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
+            }
+        });
+
+        ivNext.setOnClickListener(v -> {
+            if (currentPageNum < totalPages - 1) {
+                currentPageNum++;
+                fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
+                        currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
+            }
+        });
+
         // Gọi các phương thức ban đầu
         callSecuredEndpoint();
         fetchFoodsByFullFilter(0, currentPageSize, "", currentMinPrice, currentMaxPrice, "", 0L);
@@ -187,7 +210,7 @@ public class HomeFragment extends Fragment {
                         String displayText = "Chào buổi sáng, " + username;
                         tvSimpleUserInfo.setText(displayText);
                     } else {
-                        tvSimpleUserInfo.setText("❌ Failed to access secured API");
+                        tvSimpleUserInfo.setText("FastBreakfast xin chào");
                     }
                 }
 
@@ -203,11 +226,16 @@ public class HomeFragment extends Fragment {
 
     private void fetchFoodsByFullFilter(int page, int size, String sort, double min, double max, String foodName, Long categoryId) {
         api.getFoodByFullFilter(page, size, sort, min, max, foodName, categoryId)
-                .enqueue(new Callback<>() {
+                .enqueue(new Callback<PageResponse<FoodDto>>() {
                     @Override
                     public void onResponse(Call<PageResponse<FoodDto>> call, Response<PageResponse<FoodDto>> res) {
                         if (res.isSuccessful() && res.body() != null) {
                             adapter.setData(res.body().getContent());
+                            // Lấy thông tin phân trang từ API
+                            currentPageNum = res.body().getPage().getNumber();
+                            totalPages = res.body().getPage().getTotalPages();
+                            // Cập nhật giao diện phân trang
+                            updatePaginationUI();
                         } else {
                             Toast.makeText(requireContext(), "Không lấy được dữ liệu theo giá: " + res.code(), Toast.LENGTH_SHORT).show();
                         }
@@ -225,9 +253,27 @@ public class HomeFragment extends Fragment {
                 });
     }
 
+    private void updatePaginationUI() {
+        if (getView() == null) {
+            return;
+        }
+        TextView tvPageInfo = getView().findViewById(R.id.tvPageInfo);
+        ImageView ivPrevious = getView().findViewById(R.id.ivPrevious);
+        ImageView ivNext = getView().findViewById(R.id.ivNext);
+
+        // Hiển thị trang hiện tại (tăng 1 vì API dùng số trang bắt đầu từ 0)
+        tvPageInfo.setText((currentPageNum + 1) + " / " + totalPages);
+        // Bật/tắt ImageView Previous: chỉ bật nếu không ở trang đầu
+        ivPrevious.setEnabled(currentPageNum > 0);
+        // Bật/tắt ImageView Next: chỉ bật nếu không ở trang cuối
+        ivNext.setEnabled(currentPageNum < totalPages - 1);
+    }
+
     private void handleSearch(String query) {
         currentSearchFoodName = (query == null || query.trim().isEmpty()) ? "" : query.trim();
-        fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption, currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
+        currentPageNum = 0; // Đặt lại về trang đầu
+        fetchFoodsByFullFilter(currentPageNum, currentPageSize, currentSortOption,
+                currentMinPrice, currentMaxPrice, currentSearchFoodName, currentSearchCategoryId);
 
         svFoodName.clearFocus();
         InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);

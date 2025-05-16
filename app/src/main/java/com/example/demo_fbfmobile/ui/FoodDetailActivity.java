@@ -117,7 +117,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         btnAddToCart.setOnClickListener(v -> addToCart());
 
-        Button btnGoToCart = findViewById(R.id.btnGoToCart);
+        ImageView btnGoToCart = findViewById(R.id.btnGoToCart);
         btnGoToCart.setOnClickListener(v -> {
             Intent intent = new Intent(FoodDetailActivity.this, MainActivity.class);
             intent.putExtra("openFragment", "cart");
@@ -142,7 +142,7 @@ public class FoodDetailActivity extends AppCompatActivity {
             // Chuyển đổi userId từ String sang Long
             userId = Long.parseLong(userIdString);
 
-            // Lấy foodId (giả sử bạn đã có foodId)
+            // Lấy foodId
             String foodIdSelect = String.valueOf(foodId);
 
             // Tạo đối tượng DatabaseHelper để truy cập cơ sở dữ liệu
