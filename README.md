@@ -27,16 +27,15 @@
 * Đăng ký tài khoản bằng tên đăng nhập, mật khẩu, họ tên, số điện thoại, địa chỉ và email.
 * Xác thực đăng ký bằng mã OTP gửi qua email.
 * Hỗ trợ đăng nhập, đăng xuất (xoá token), và khôi phục mật khẩu qua email.
-  ![image](https://github.com/user-attachments/assets/38ba472c-5086-486f-a6e1-0376d86a271b)
-  ![image](https://github.com/user-attachments/assets/aa557d81-3596-432e-8102-450e4a199653)
-  ![image](https://github.com/user-attachments/assets/f5c1bc63-98d8-4b93-93d7-cc062d067216)
-  ![image](https://github.com/user-attachments/assets/e42d28db-14ca-488d-b3cb-00a391fa50e4)
+![image](https://github.com/user-attachments/assets/38ba472c-5086-486f-a6e1-0376d86a271b)
+![image](https://github.com/user-attachments/assets/aa557d81-3596-432e-8102-450e4a199653)
+![image](https://github.com/user-attachments/assets/f5c1bc63-98d8-4b93-93d7-cc062d067216)
+![image](https://github.com/user-attachments/assets/e42d28db-14ca-488d-b3cb-00a391fa50e4)
 
 ### 2. Tìm kiếm món ăn
 
 * Cho phép tìm món ăn theo tên mà không cần đăng nhập.
 * Kết quả hiển thị rõ ràng với hình ảnh, giá và mô tả, được phân trang dễ nhìn.
-* 
 
 ### 3. Lọc và sắp xếp món ăn
 
